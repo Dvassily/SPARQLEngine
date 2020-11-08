@@ -47,16 +47,20 @@ public class SPARQLEngineTest
 
 	assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
 
+    }
+
+    @Test
+    public void testFindPredicateObject() {
 	Set<RDFTriple> triples = engine.findPredicateObject(ABRAHAM_LINCOLN_ENTITY);
 
 	assertEquals(3, triples.size());
-	for (RDFTriple t : triples) {
-	    if (t.getPredicate().equals(HAS_NAME_PREDICATE)) {
-		assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, t.getObject());
-	    } else if (t.getPredicate().equals(BORN_ON_DATE_PREDICATE)) {
-		assertEquals(ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY, t.getObject());
-	    } else if (t.getPredicate().equals(DIED_ON_DATE_PREDICATE)) {
-		assertEquals(ABRAHAM_LINCOLN_DEATH_DATE_ENTITY, t.getObject());
+	for (RDFTriple triple : triples) {
+	    if (triple.getPredicate().equals(HAS_NAME_PREDICATE)) {
+		assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
+	    } else if (triple.getPredicate().equals(BORN_ON_DATE_PREDICATE)) {
+		assertEquals(ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY, triple.getObject());
+	    } else if (triple.getPredicate().equals(DIED_ON_DATE_PREDICATE)) {
+		assertEquals(ABRAHAM_LINCOLN_DEATH_DATE_ENTITY, triple.getObject());
 	    } else {
 		assertTrue(false);
 	    }

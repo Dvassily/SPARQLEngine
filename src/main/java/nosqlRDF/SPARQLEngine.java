@@ -73,6 +73,7 @@ public class SPARQLEngine {
 
     /**
      * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
+     * Complexity is O(log(n))
      *
      * @param subject The input subject
      * @param predicate The input predicate
@@ -83,7 +84,8 @@ public class SPARQLEngine {
 
     /**
      * Find the set of RDF triple that corresponds to a specific subject
-     *
+     * Complexity is O(log(n))
+     *     *
      * @param subject The input subject
      */
     public Set<RDFTriple> findPredicateObject(String subject) {
