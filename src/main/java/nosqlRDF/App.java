@@ -24,19 +24,21 @@ public class App
 	
 	SPARQLEngine engine = new SPARQLEngine();
 
-	System.out.println("Benchmarking création Dictionnaire et Index");
-	long debut = System.currentTimeMillis();
-
+	BenchmarkEngine benchmarkEngine = new BenchmarkEngine("Dictionary and hexastore indexes construction");
+	benchmarkEngine.begin();
+	
 	try {
 	    engine.parseData(arguments.getDataPath());
 	} catch (FileNotFoundException e) {
 	    System.err.println("Path " + arguments.getDataPath() + " does not points towards an existing file.");
+	    return;
 	}
 	
 	engine.initDictionaryAndIndexes();
 
-	long fin = System.currentTimeMillis();
-	long benchmarkDicIndex= fin - debut;
-	System.out.println("temps d'exécution: "+benchmarkDicIndex+"ms");
+	benchmarkEngine.end();
+
+	System.out.println("Benchmarks : ");
+	System.out.println(" * " + benchmarkEngine);
     }
 }

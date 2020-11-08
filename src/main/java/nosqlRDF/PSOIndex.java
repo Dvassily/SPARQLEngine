@@ -18,7 +18,7 @@ public class PSOIndex extends AbstractHexastoreIndex {
 
     @Override
     protected BigInteger composeKey(BigInteger subjectKey, BigInteger predicateKey, BigInteger objectKey) {
-	return composeKeyInternal(predicateKey,subjectKey, objectKey);
+	return composeKeyInternal(predicateKey, subjectKey, objectKey);
     }
 
 }

@@ -18,7 +18,7 @@ public class OPSIndex extends AbstractHexastoreIndex {
 
     @Override
     protected BigInteger composeKey(BigInteger subjectKey, BigInteger predicateKey, BigInteger objectKey) {
-	return composeKeyInternal(objectKey, predicateKey ,subjectKey);
+	return composeKeyInternal(objectKey, predicateKey, subjectKey);
     }
 
 }
