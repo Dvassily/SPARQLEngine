@@ -30,7 +30,7 @@ public class App
 	try {
 	    engine.parseData(arguments.getDataPath());
 	} catch (FileNotFoundException e) {
-	    System.err.println("Path " + arguments.getDataPath() + " arguments does not points towards an existing file.");
+	    System.err.println("Path " + arguments.getDataPath() + " does not points towards an existing file.");
 	}
 	
 	engine.initDictionaryAndIndexes();

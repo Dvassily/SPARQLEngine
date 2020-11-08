@@ -55,6 +55,10 @@ public class SPARQLEngine {
 	return spoIndex.findObject(subject, predicate);
     }
 
+    public Set<RDFTriple> findPredicateObject(String subject) {
+	return spoIndex.findPredicateObject(subject);
+    }
+
     private void initDictionary() {
 	for (RDFTriple triple : triples) {
 	    String subject = triple.getSubject();

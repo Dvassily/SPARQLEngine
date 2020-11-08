@@ -26,32 +26,26 @@ public abstract class AbstractHexastoreIndex {
 	BigInteger xKey = dictionary.getKey(x);
 	BigInteger keyLowerBound = composeKeyInternal(xKey, BigInteger.valueOf(0), BigInteger.valueOf(0));
 	BigInteger keyUpperBound = composeKeyInternal(xKey.add(BigInteger.valueOf(1)), BigInteger.valueOf(0), BigInteger.valueOf(0)).subtract(BigInteger.valueOf(1));
-
 	return valuesBetween(keyLowerBound, keyUpperBound);
     }
 
     protected Set<RDFTriple> findZ(String x, String y) {
-	System.out.println(dictionary);
 
 	BigInteger xKey = dictionary.getKey(x);
 	BigInteger yKey = dictionary.getKey(y);
-	System.out.println("x : " + xKey);
-	System.out.println("y : " + yKey);
 
     	BigInteger keyLowerBound = composeKeyInternal(xKey, yKey, BigInteger.valueOf(0));
-	System.out.println("lb : " + keyLowerBound);
 
 	BigInteger keyUpperBound = composeKeyInternal(xKey, yKey.add(BigInteger.valueOf(1)), BigInteger.valueOf(0)).subtract(BigInteger.valueOf(1));
-	System.out.println("ub : " + keyUpperBound);
 	
 	return valuesBetween(keyLowerBound, keyUpperBound);	
     }
 
     private Set<RDFTriple> valuesBetween(BigInteger keyLowerBound, BigInteger keyUpperBound) {
-        BigInteger lowerBound =  content.floorKey(keyLowerBound);
+        BigInteger lowerBound =  content.ceilingKey(keyLowerBound);
 	BigInteger upperBound =  content.floorKey(keyUpperBound);
 
-	return new HashSet<>(content.subMap(lowerBound, upperBound).values());
+	return new HashSet<>(content.subMap(lowerBound, true, upperBound, true).values());
     }
 
     private BigInteger hash(RDFTriple triple) {
