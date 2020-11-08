@@ -14,11 +14,21 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import fr.lirmm.graphik.graal.api.core.Atom;
 import fr.lirmm.graphik.graal.io.rdf.RDFParser;
 
+/**
+ * Main class for SPARQL engine
+ * Its interface allows to insert triples, manually or through an .rdfxml file, intialize
+ * the dictionary/indexes, and query the loaded datas
+ */
 public class SPARQLEngine {
     private Set<RDFTriple> triples = new HashSet<>();
     private Dictionary dictionary = new Dictionary();
     private SPOIndex spoIndex = null;
-    
+
+    /**
+     * Feed engine datas with an .rdfxml
+     *
+     * @param dataPath The path towards the RDF file
+     */
     public void parseData(String dataPath) throws FileNotFoundException  {
 	ArrayList<Atom> atoms = new ArrayList<Atom>();
 
@@ -42,22 +52,52 @@ public class SPARQLEngine {
 
     }
 
+    /**
+     * Insert an RDF triple
+     *
+     * @param subject The triple subject
+     * @param predicate, The triple predicate
+     * @param object, The triple object
+     */
     public void insertTriple(String subject, String predicate, String object) {
 	triples.add(new RDFTriple(subject, predicate, object));	
     }
 
+    /**
+     * Intialize the dictionary and the 6 indexes
+     */
     public void initDictionaryAndIndexes() {
 	initDictionary();
 	initIndexes();
     }
 
+    /**
+     * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
+     *
+     * @param subject The input subject
+     * @param predicate The input predicate
+     */
     public Set<RDFTriple> findObject(String subject, String predicate) {
 	return spoIndex.findObject(subject, predicate);
     }
 
+    /**
+     * Find the set of RDF triple that corresponds to a specific subject
+     *
+     * @param subject The input subject
+     */
     public Set<RDFTriple> findPredicateObject(String subject) {
 	return spoIndex.findPredicateObject(subject);
     }
+
+
+    /**
+     * Find the number of entities loaded in the engine
+     */
+    public int entityCount() {
+	return dictionary.entityCount();
+    }
+
 
     private void initDictionary() {
 	for (RDFTriple triple : triples) {
@@ -82,9 +122,5 @@ public class SPARQLEngine {
     private void initIndexes() {
 	spoIndex = new SPOIndex(dictionary);
 	spoIndex.build(triples);
-    }
-
-    public int resourcesCount() {
-	return dictionary.resourcesCount();
     }
 }

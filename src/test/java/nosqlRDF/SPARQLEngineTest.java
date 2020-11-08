@@ -38,7 +38,7 @@ public class SPARQLEngineTest
 
     @Test
     public void testInsertTriple() {
-	assertEquals(12, engine.resourcesCount());
+	assertEquals(12, engine.entityCount());
     }
 
     @Test

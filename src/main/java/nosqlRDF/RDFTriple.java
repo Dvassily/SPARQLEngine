@@ -1,5 +1,9 @@
 package nosqlRDF;
 
+/**
+ * Class that represent an RDF triple
+ * Its objects each contains a subject, a predicate and an object
+ */
 public class RDFTriple {
     private String subject;
     private String predicate;
