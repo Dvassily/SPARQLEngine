@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="nosqlRDF.SPARQLEngineTest" time="0.031" tests="2" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="sun.cpu.isalist" value=""/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/basil/Etudes/M2/S3/noSQL/SPARQLEngine/target/test-classes:/home/basil/Etudes/M2/S3/noSQL/SPARQLEngine/target/classes:/home/basil/.m2/repository/junit/junit/4.11/junit-4.11.jar:/home/basil/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/basil/.m2/repository/com/beust/jcommander/1.78/jcommander-1.78.jar:/home/basil/.m2/repository/fr/lirmm/graphik/graal-core/1.3.1/graal-core-1.3.1.jar:/home/basil/.m2/repository/fr/lirmm/graphik/graal-util/1.3.1/graal-util-1.3.1.jar:/home/basil/.m2/repository/org/jgrapht/jgrapht-core/0.9.0/jgrapht-core-0.9.0.jar:/home/basil/.m2/repository/fr/lirmm/graphik/graal-api/1.3.1/graal-api-1.3.1.jar:/home/basil/.m2/repository/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar:/home/basil/.m2/repository/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar:/home/basil/.m2/repository/fr/lirmm/graphik/graal-io-rdf/1.3.1/graal-io-rdf-1.3.1.jar:/home/basil/.m2/repository/fr/lirmm/graphik/rdf4j-common/1.3.1/rdf4j-common-1.3.1.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-rio-turtle/1.0.3/rdf4j-rio-turtle-1.0.3.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-rio-api/3.4.3/rdf4j-rio-api-3.4.3.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-util/3.4.3/rdf4j-util-3.4.3.jar:/home/basil/.m2/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar:/home/basil/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar:/home/basil/.m2/repository/com/github/jsonld-java/jsonld-java/0.13.0/jsonld-java-0.13.0.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpclient-osgi/4.5.10/httpclient-osgi-4.5.10.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10.jar:/home/basil/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpmime/4.5.10/httpmime-4.5.10.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpclient-cache/4.5.10/httpclient-cache-4.5.10.jar:/home/basil/.m2/repository/org/apache/httpcomponents/fluent-hc/4.5.10/fluent-hc-4.5.10.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpcore-osgi/4.4.12/httpcore-osgi-4.4.12.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpcore-nio/4.4.12/httpcore-nio-4.4.12.jar:/home/basil/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.29/jcl-over-slf4j-1.7.29.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-rio-rdfxml/3.4.3/rdf4j-rio-rdfxml-3.4.3.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-rio-datatypes/3.4.3/rdf4j-rio-datatypes-3.4.3.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-rio-languages/3.4.3/rdf4j-rio-languages-3.4.3.jar:/home/basil/.m2/repository/commons-io/commons-io/2.6/commons-io-2.6.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-model/3.4.3/rdf4j-model-3.4.3.jar:"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="user.timezone" value=""/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="os.name" value="Linux"/>
+    <property name="user.country" value="FR"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-openjdk/jre/lib/amd64"/>
+    <property name="sun.java.command" value="/home/basil/Etudes/M2/S3/noSQL/SPARQLEngine/target/surefire/surefirebooter5425143330139175484.jar /home/basil/Etudes/M2/S3/noSQL/SPARQLEngine/target/surefire 2020-11-08T17-55-11_172-jvmRun1 surefire6927992170388105238tmp surefire_04610803998826394333tmp"/>
+    <property name="surefire.test.class.path" value="/home/basil/Etudes/M2/S3/noSQL/SPARQLEngine/target/test-classes:/home/basil/Etudes/M2/S3/noSQL/SPARQLEngine/target/classes:/home/basil/.m2/repository/junit/junit/4.11/junit-4.11.jar:/home/basil/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/basil/.m2/repository/com/beust/jcommander/1.78/jcommander-1.78.jar:/home/basil/.m2/repository/fr/lirmm/graphik/graal-core/1.3.1/graal-core-1.3.1.jar:/home/basil/.m2/repository/fr/lirmm/graphik/graal-util/1.3.1/graal-util-1.3.1.jar:/home/basil/.m2/repository/org/jgrapht/jgrapht-core/0.9.0/jgrapht-core-0.9.0.jar:/home/basil/.m2/repository/fr/lirmm/graphik/graal-api/1.3.1/graal-api-1.3.1.jar:/home/basil/.m2/repository/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar:/home/basil/.m2/repository/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar:/home/basil/.m2/repository/fr/lirmm/graphik/graal-io-rdf/1.3.1/graal-io-rdf-1.3.1.jar:/home/basil/.m2/repository/fr/lirmm/graphik/rdf4j-common/1.3.1/rdf4j-common-1.3.1.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-rio-turtle/1.0.3/rdf4j-rio-turtle-1.0.3.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-rio-api/3.4.3/rdf4j-rio-api-3.4.3.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-util/3.4.3/rdf4j-util-3.4.3.jar:/home/basil/.m2/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar:/home/basil/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar:/home/basil/.m2/repository/com/github/jsonld-java/jsonld-java/0.13.0/jsonld-java-0.13.0.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpclient-osgi/4.5.10/httpclient-osgi-4.5.10.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10.jar:/home/basil/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpmime/4.5.10/httpmime-4.5.10.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpclient-cache/4.5.10/httpclient-cache-4.5.10.jar:/home/basil/.m2/repository/org/apache/httpcomponents/fluent-hc/4.5.10/fluent-hc-4.5.10.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpcore-osgi/4.4.12/httpcore-osgi-4.4.12.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12.jar:/home/basil/.m2/repository/org/apache/httpcomponents/httpcore-nio/4.4.12/httpcore-nio-4.4.12.jar:/home/basil/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.29/jcl-over-slf4j-1.7.29.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-rio-rdfxml/3.4.3/rdf4j-rio-rdfxml-3.4.3.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-rio-datatypes/3.4.3/rdf4j-rio-datatypes-3.4.3.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-rio-languages/3.4.3/rdf4j-rio-languages-3.4.3.jar:/home/basil/.m2/repository/commons-io/commons-io/2.6/commons-io-2.6.jar:/home/basil/.m2/repository/org/eclipse/rdf4j/rdf4j-model/3.4.3/rdf4j-model-3.4.3.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/basil"/>
+    <property name="user.language" value="fr"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.home" value="/usr/lib/jvm/java-8-openjdk/jre"/>
+    <property name="basedir" value="/home/basil/Etudes/M2/S3/noSQL/SPARQLEngine"/>
+    <property name="file.separator" value="/"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="surefire.real.class.path" value="/home/basil/Etudes/M2/S3/noSQL/SPARQLEngine/target/surefire/surefirebooter5425143330139175484.jar"/>
+    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-8-openjdk/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk/jre/lib/rt.jar:/usr/lib/jvm/java-8-openjdk/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-openjdk/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk/jre/lib/jfr.jar:/usr/lib/jvm/java-8-openjdk/jre/classes"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="1.8.0_265-b01"/>
+    <property name="user.name" value="basil"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="5.4.72-1-MANJARO"/>
+    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-8-openjdk/jre/lib/endorsed"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="localRepository" value="/home/basil/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="1.8.0_265"/>
+    <property name="user.dir" value="/home/basil/Etudes/M2/S3/noSQL/SPARQLEngine"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.library.path" value="/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="25.265-b01"/>
+    <property name="java.ext.dirs" value="/usr/lib/jvm/java-8-openjdk/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="52.0"/>
+  </properties>
+  <testcase name="testFindObject" classname="nosqlRDF.SPARQLEngineTest" time="0.005"/>
+  <testcase name="testInsertTriple" classname="nosqlRDF.SPARQLEngineTest" time="0"/>
+</testsuite>

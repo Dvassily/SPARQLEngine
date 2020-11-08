@@ -23,4 +23,9 @@ public class RDFTriple {
     public String getObject() {
 	return object;
     }
+
+    @Override
+    public String toString() {
+	return "{" + subject + ", " + predicate + ", " + object + "}";
+    }
 }
