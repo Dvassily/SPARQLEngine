@@ -44,6 +44,7 @@ public abstract class AbstractHexastoreIndex {
 	BigInteger xKey = dictionary.getKey(x);
 	BigInteger keyLowerBound = composeKeyInternal(xKey, BigInteger.valueOf(0), BigInteger.valueOf(0));
 	BigInteger keyUpperBound = composeKeyInternal(xKey.add(BigInteger.valueOf(1)), BigInteger.valueOf(0), BigInteger.valueOf(0)).subtract(BigInteger.valueOf(1));
+	
 	return valuesBetween(keyLowerBound, keyUpperBound);
     }
 
@@ -54,12 +55,11 @@ public abstract class AbstractHexastoreIndex {
      * @param y the identifier of the entity whose value from dictionary correponds to the {entityKeySize} bits situated just after the {entityKeySize} most significant bits of the resulting triple
      */
     protected Set<RDFTriple> findZ(String x, String y) {
-
+	
 	BigInteger xKey = dictionary.getKey(x);
 	BigInteger yKey = dictionary.getKey(y);
 
     	BigInteger keyLowerBound = composeKeyInternal(xKey, yKey, BigInteger.valueOf(0));
-
 	BigInteger keyUpperBound = composeKeyInternal(xKey, yKey.add(BigInteger.valueOf(1)), BigInteger.valueOf(0)).subtract(BigInteger.valueOf(1));
 	
 	return valuesBetween(keyLowerBound, keyUpperBound);	
@@ -73,7 +73,7 @@ public abstract class AbstractHexastoreIndex {
     private Set<RDFTriple> valuesBetween(BigInteger keyLowerBound, BigInteger keyUpperBound) {
         BigInteger lowerBound =  content.ceilingKey(keyLowerBound);
 	BigInteger upperBound =  content.floorKey(keyUpperBound);
-
+	
 	return new HashSet<>(content.subMap(lowerBound, true, upperBound, true).values());
     }
 

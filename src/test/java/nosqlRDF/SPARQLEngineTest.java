@@ -1,4 +1,3 @@
-
 package nosqlRDF;
 
 import java.util.Set;
@@ -46,7 +45,6 @@ public class SPARQLEngineTest
 	RDFTriple triple = engine.findObject(ABRAHAM_LINCOLN_ENTITY, HAS_NAME_PREDICATE).iterator().next();
 
 	assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
-
     }
 
     @Test
@@ -65,5 +63,20 @@ public class SPARQLEngineTest
 		assertTrue(false);
 	    }
 	}
+    }
+
+    @Test
+    public void testFindPredicate() {
+	RDFTriple triple = engine.findPredicate(ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY, ABRAHAM_LINCOLN_ENTITY).iterator().next();
+
+	assertEquals(BORN_ON_DATE_PREDICATE, triple.getPredicate());	
+    }
+
+    @Test
+    public void testFindSubjectPredicate() {
+	RDFTriple triple = engine.findSubjectPredicate(ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY).iterator().next();
+	
+	assertEquals(BORN_ON_DATE_PREDICATE, triple.getPredicate());
+	assertEquals(ABRAHAM_LINCOLN_ENTITY, triple.getSubject());
     }
 }

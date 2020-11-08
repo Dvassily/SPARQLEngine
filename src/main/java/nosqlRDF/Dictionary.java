@@ -13,7 +13,7 @@ import java.math.BigInteger;
 public class Dictionary {
     private Map<String, BigInteger> dictionary = new HashMap<>();
     private Map<BigInteger, String> reverseDictionary = new HashMap<>();
-    private static BigInteger counter = BigInteger.valueOf(0);
+    private BigInteger counter = BigInteger.valueOf(0);
 
     /**
      * Returns true if an entity is in the dictionary, false otherwise
