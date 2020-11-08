@@ -66,4 +66,14 @@ public class SPARQLEngineTest
 	    }
 	}
     }
-}
+    @Test
+    public void testFindSubjectObject() {
+	Set<RDFTriple> triples = engine.findSubjectObject(HAS_NAME_PREDICATE);
+	assertEquals(1, triples.size());
+    RDFTriple triple=triples.iterator().next();
+    assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
+    }
+
+
+} 
+
