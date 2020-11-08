@@ -4,6 +4,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import java.io.FileNotFoundException;
+import java.lang.*;
 
 public class App 
 {
@@ -23,6 +24,9 @@ public class App
 	
 	SPARQLEngine engine = new SPARQLEngine();
 
+	System.out.println("Benchmarking création Dictionnaire et Index");
+	long debut = System.currentTimeMillis();
+
 	try {
 	    engine.parseData(arguments.getDataPath());
 	} catch (FileNotFoundException e) {
@@ -30,5 +34,9 @@ public class App
 	}
 	
 	engine.initDictionaryAndIndexes();
+
+	long fin = System.currentTimeMillis();
+	long benchmarkDicIndex= fin - debut;
+	System.out.println("temps d'exécution: "+benchmarkDicIndex+"ms");
     }
 }
