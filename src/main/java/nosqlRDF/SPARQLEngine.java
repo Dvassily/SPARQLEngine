@@ -23,7 +23,11 @@ public class SPARQLEngine {
     private Set<RDFTriple> triples = new HashSet<>();
     private Dictionary dictionary = new Dictionary();
     private SPOIndex spoIndex = null;
+    private PSOIndex psoIndex = null;
     private OSPIndex ospIndex = null;
+    private SOPIndex sopIndex = null;
+    private POSIndex posIndex = null;
+    private OPSIndex opsIndex = null;
 
     /**
      * Feed engine datas with an .rdfxml
@@ -104,6 +108,7 @@ public class SPARQLEngine {
 	return spoIndex.findPredicateObject(subject);
     }
 
+
     /**
      * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
      * Complexity is O(log(n))
@@ -112,6 +117,16 @@ public class SPARQLEngine {
      */
     public Set<RDFTriple> findSubjectPredicate(String object) {
 	return ospIndex.findSubjectPredicate(object);
+    }
+
+    /**
+     * Find the set of RDF triple that corresponds to a specific predicate
+     * Complexity is O(log(n))
+     *     *
+     * @param predicate The input predicate
+     */
+    public Set<RDFTriple> findSubjectObject(String predicate) {
+	return psoIndex.findSubjectObject(predicate);
     }
 
 
@@ -144,8 +159,17 @@ public class SPARQLEngine {
 
     private void initIndexes() {
 	spoIndex = new SPOIndex(dictionary);
-	spoIndex.build(triples);
+	psoIndex = new PSOIndex(dictionary);
 	ospIndex = new OSPIndex(dictionary);
+	sopIndex = new SOPIndex(dictionary);
+	posIndex = new POSIndex(dictionary);
+	opsIndex= new OPSIndex(dictionary);
+
+	spoIndex.build(triples);
 	ospIndex.build(triples);
+	psoIndex.build(triples);
+	sopIndex.build(triples);
+	posIndex.build(triples);
+	opsIndex.build(triples);
     }
 }

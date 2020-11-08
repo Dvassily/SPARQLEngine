@@ -79,4 +79,14 @@ public class SPARQLEngineTest
 	assertEquals(BORN_ON_DATE_PREDICATE, triple.getPredicate());
 	assertEquals(ABRAHAM_LINCOLN_ENTITY, triple.getSubject());
     }
+
+    @Test
+    public void testFindSubjectObject() {
+	Set<RDFTriple> triples = engine.findSubjectObject(HAS_NAME_PREDICATE);
+	assertEquals(1, triples.size());
+	
+	RDFTriple triple = triples.iterator().next();
+	assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
+    }
 }
+
