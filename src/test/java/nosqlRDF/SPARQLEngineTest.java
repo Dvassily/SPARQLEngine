@@ -1,7 +1,13 @@
 package nosqlRDF;
 
 import nosqlRDF.datas.RDFTriple;
+import nosqlRDF.datas.Dictionary;
+import nosqlRDF.indexes.*;
+import nosqlRDF.requests.Request;
+import nosqlRDF.requests.Condition;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,8 +27,14 @@ public class SPARQLEngineTest
     private static final String WORKS_FOR_PREDICATE = "worksFor";
     private static final String PARIS_ENTITY = "Paris";
     private static final String EDF_ENTITY = "EDF";
-
-
+    //private static final String BOB_NONAME_ENTITY="Bob_Noname";
+    
+    private static final Condition cond1=new Condition("v0","BORN_ON_DATE_PREDICATE","ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY",true,false,false);
+    private static final Condition cond2=new Condition("v0","HAS_NAME_PREDICATE","ABRAHAM_LINCOLN_NAME_ENTITY",true,false,false);
+    private static final Condition cond3=new Condition("ALICE_ENTITY","v0","PARIS_ENTITY",false,true,false);
+    private static final Condition cond4=new Condition("ALICE_ENTITY","WORKS_FOR_PREDICAT","v0",false,false,true);
+    
+    private List<Condition> conditions=new ArrayList<Condition>();
     private SPARQLEngine engine;
     
     @Before
@@ -31,19 +43,12 @@ public class SPARQLEngineTest
 	
 	engine.insertTriple(ABRAHAM_LINCOLN_ENTITY, HAS_NAME_PREDICATE, ABRAHAM_LINCOLN_NAME_ENTITY);
 	engine.insertTriple(ABRAHAM_LINCOLN_ENTITY, BORN_ON_DATE_PREDICATE, ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY);
-    engine.insertTriple(BOB_NONAME_ENTITY, BORN_ON_DATE_PREDICATE, ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY);
+    //engine.insertTriple(BOB_NONAME_ENTITY, BORN_ON_DATE_PREDICATE, ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY);
 	engine.insertTriple(ABRAHAM_LINCOLN_ENTITY, DIED_ON_DATE_PREDICATE, ABRAHAM_LINCOLN_DEATH_DATE_ENTITY);
 	engine.insertTriple(ALICE_ENTITY, LIVES_IN_PREDICATE, PARIS_ENTITY);
 	engine.insertTriple(ALICE_ENTITY, WORKS_FOR_PREDICATE, EDF_ENTITY);
 
-	engine.initDictionaryAndIndexes();
-
-    Condition cond1=new Condition("v0","BORN_ON_DATE_PREDICATE","ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY",true,false,false);
-    Condition cond2=new Condition("v0","HAS_NAME_PREDICATE","ABRAHAM_LINCOLN_NAME_ENTITY",true,false,false);
-    Condition cond3=new Condition("ALICE_ENTITY","v0","PARIS_ENTITY",false,true,false);
-    Condition cond4=new Condition("ALICE_ENTITY","WORKS_FOR_PREDICAT","v0",false,false,true);
-
-    List<Condition> conditions=new ArrayList<Condition>();
+	engine.initDictionaryAndIndexes();  
     }
 
     @Test
@@ -110,21 +115,33 @@ public class SPARQLEngineTest
     }
 ///////Test Requests//////////
    @Test
-   conditions.add(cond1);
+   public void testReqCond1(){
+   conditions.add(0,cond1);
    Request req=new Request("v0",conditions);
+   } 
+
 
    @Test
-   conditions.add(cond1);
-   conditions.add(cond2);
+   public void testReqCond1Cond2(){
+   conditions.add(0,cond1);
+   conditions.add(1,cond2);
    Request req=new Request("v0",conditions);
+   } 
+
 
    @Test
-   conditions.add(cond3);
+   public void testReqCond3(){
+   conditions.add(0,cond3);
    Request req=new Request("v0",conditions);
+   } 
+
 
    @Test
-   conditions.add(cond4);
+   public void testReqCond4(){
+   conditions.add(0,cond4);
    Request req=new Request("v0",conditions);
+   } 
+
 
 
 

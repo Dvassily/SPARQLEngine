@@ -48,7 +48,7 @@ public class App
 	    for (Request request : requests) {
 		System.out.println("Execution of request : \n" + request);
 
-		List<RDFTriple> triple = engine.query(request);
+		//List<RDFTriple> triple = engine.query(request);
 
 	    }
 	    

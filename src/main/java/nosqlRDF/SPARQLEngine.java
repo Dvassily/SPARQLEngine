@@ -3,7 +3,11 @@ package nosqlRDF;
 import nosqlRDF.datas.RDFTriple;
 import nosqlRDF.datas.Dictionary;
 import nosqlRDF.indexes.*;
+import nosqlRDF.requests.Request;
+import nosqlRDF.requests.Condition;
 
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -81,6 +85,17 @@ public class SPARQLEngine {
     }
 
     /**
+     * Find the set of RDF triple that corresponds to a specific  object and a specific predicate
+     * Complexity is O(log(n))
+     *
+     * @param object The input object
+     * @param predicate The input predicate
+     */
+    public Set<RDFTriple> findSubject(String object, String predicate) {
+	return opsIndex.findSubject(object, predicate);
+    }
+
+    /**
      * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
      * Complexity is O(log(n))
      *
@@ -133,19 +148,19 @@ public class SPARQLEngine {
 	return psoIndex.findSubjectObject(predicate);
     }
 
-    public List<RDFTriple> query(Request request)  {
-	Set<RDFTriple> resultSet = new HashSet<>();
-	Map<Condition, Set<RDFTriple>> intermediaryResults = new HashMap<>();
+    // public List<RDFTriple> query(Request request)  {
+	// Set<RDFTriple> resultSet = new HashSet<>();
+	// Map<Condition, Set<RDFTriple>> intermediaryResults = new HashMap<>();
 	
-	for (Condition condition : request.getConditions()) {
-	    resultSet.put(condition, findSubject(condition.getPredicate(), condition.getObject()));
-	}
+	// for (Condition condition : request.getConditions()) {
+	//     resultSet.add(condition, findSubject(condition.getPredicate(), condition.getObject()));
+	// }
 
-	Condition = null;
-	for (Condition condition : intermediaryResults.keySet()) {
+	// Condition = null;
+	// for (Condition condition : intermediaryResults.keySet()) {
 	    
-	}
-    }
+	// }
+    // }
 
     /**
      * Find the number of entities loaded in the engine

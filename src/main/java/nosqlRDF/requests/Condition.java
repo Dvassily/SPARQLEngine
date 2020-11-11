@@ -22,7 +22,7 @@ public class Condition {
     }
 
     public boolean isPredicateVariable() {
-        return PredicatVariable;
+        return PredicateVariable;
     }
 
     public boolean isObjectVariable() {
@@ -42,6 +42,17 @@ public class Condition {
         this.PredicateVariable=predicateVariable;
         this.ObjectVariable=objectVariable;
     }
+
+
+    public Condition(String subjet, String predicate, String object) {
+        this.subject = subjet;
+        this.predicate = predicate;
+        this.object = object;
+        this.SubjectVariable=true;
+        this.PredicateVariable=false;
+        this.ObjectVariable=false;
+    }
+
 
 
 }
