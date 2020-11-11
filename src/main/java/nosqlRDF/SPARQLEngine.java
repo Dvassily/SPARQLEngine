@@ -1,5 +1,9 @@
 package nosqlRDF;
 
+import nosqlRDF.datas.RDFTriple;
+import nosqlRDF.datas.Dictionary;
+import nosqlRDF.indexes.*;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -54,8 +58,8 @@ public class SPARQLEngine {
 	}
 	
 	parser.close();
-
     }
+	
 
     /**
      * Insert an RDF triple
@@ -92,7 +96,7 @@ public class SPARQLEngine {
      * Complexity is O(log(n))
      *
      * @param subject The input subject
-     * @param predicate The input predicate
+     * @param object The input predicate
      */
     public Set<RDFTriple> findPredicate(String subject, String object) {
 	return ospIndex.findPredicate(subject, object);
@@ -113,7 +117,7 @@ public class SPARQLEngine {
      * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
      * Complexity is O(log(n))
      *     *
-     * @param subject The input subject
+     * @param object The input subject
      */
     public Set<RDFTriple> findSubjectPredicate(String object) {
 	return ospIndex.findSubjectPredicate(object);
