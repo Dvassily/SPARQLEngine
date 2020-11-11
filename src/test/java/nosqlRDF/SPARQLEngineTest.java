@@ -19,7 +19,8 @@ public class SPARQLEngineTest
     private static final String WORKS_FOR_PREDICATE = "worksFor";
     private static final String PARIS_ENTITY = "Paris";
     private static final String EDF_ENTITY = "EDF";
-    
+
+
     private SPARQLEngine engine;
     
     @Before
@@ -33,6 +34,7 @@ public class SPARQLEngineTest
 	engine.insertTriple(ALICE_ENTITY, WORKS_FOR_PREDICATE, EDF_ENTITY);
 
 	engine.initDictionaryAndIndexes();
+
     }
 
     @Test
@@ -97,5 +99,6 @@ public class SPARQLEngineTest
 	RDFTriple triple = triples.iterator().next();
 	assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
     }
+
 }
 
