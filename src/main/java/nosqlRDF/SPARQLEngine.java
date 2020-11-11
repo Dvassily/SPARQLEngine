@@ -58,8 +58,8 @@ public class SPARQLEngine {
 	}
 	
 	parser.close();
+
     }
-	
 
     /**
      * Insert an RDF triple
