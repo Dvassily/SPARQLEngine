@@ -11,8 +11,8 @@ public class Request {
         return conditions;
     }
 
-    String projection;
-    List<Condition> conditions;
+    private String projection;
+    private List<Condition> conditions;
 
     public Request(String projection, List<Condition> conditions) {
         this.projection = projection;

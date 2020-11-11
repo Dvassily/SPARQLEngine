@@ -31,12 +31,19 @@ public class SPARQLEngineTest
 	
 	engine.insertTriple(ABRAHAM_LINCOLN_ENTITY, HAS_NAME_PREDICATE, ABRAHAM_LINCOLN_NAME_ENTITY);
 	engine.insertTriple(ABRAHAM_LINCOLN_ENTITY, BORN_ON_DATE_PREDICATE, ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY);
+    engine.insertTriple(BOB_NONAME_ENTITY, BORN_ON_DATE_PREDICATE, ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY);
 	engine.insertTriple(ABRAHAM_LINCOLN_ENTITY, DIED_ON_DATE_PREDICATE, ABRAHAM_LINCOLN_DEATH_DATE_ENTITY);
 	engine.insertTriple(ALICE_ENTITY, LIVES_IN_PREDICATE, PARIS_ENTITY);
 	engine.insertTriple(ALICE_ENTITY, WORKS_FOR_PREDICATE, EDF_ENTITY);
 
 	engine.initDictionaryAndIndexes();
 
+    Condition cond1=new Condition("v0","BORN_ON_DATE_PREDICATE","ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY",true,false,false);
+    Condition cond2=new Condition("v0","HAS_NAME_PREDICATE","ABRAHAM_LINCOLN_NAME_ENTITY",true,false,false);
+    Condition cond3=new Condition("ALICE_ENTITY","v0","PARIS_ENTITY",false,true,false);
+    Condition cond4=new Condition("ALICE_ENTITY","WORKS_FOR_PREDICAT","v0",false,false,true);
+
+    List<Condition> conditions=new ArrayList<Condition>();
     }
 
     @Test
@@ -101,6 +108,25 @@ public class SPARQLEngineTest
 	RDFTriple triple = triples.iterator().next();
 	assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
     }
+///////Test Requests//////////
+   @Test
+   conditions.add(cond1);
+   Request req=new Request("v0",conditions);
+
+   @Test
+   conditions.add(cond1);
+   conditions.add(cond2);
+   Request req=new Request("v0",conditions);
+
+   @Test
+   conditions.add(cond3);
+   Request req=new Request("v0",conditions);
+
+   @Test
+   conditions.add(cond4);
+   Request req=new Request("v0",conditions);
+
+
 
 }
 
