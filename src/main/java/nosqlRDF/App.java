@@ -1,12 +1,15 @@
 package nosqlRDF;
 
 import nosqlRDF.requests.SPARQLRequestParser;
+import nosqlRDF.requests.Request;
+import nosqlRDF.datas.RDFTriple;
 
 import java.io.IOException;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.lang.*;
 
 public class App 
@@ -39,10 +42,16 @@ public class App
 	
 	engine.initDictionaryAndIndexes();
 	
-	String query = "SELECT ?v0 WHERE { ?v0 <http://schema.org/eligibleRegion> <http://db.uwaterloo.ca/~galuc/wsdbm/Country137> . }";
-
 	try {
-	    new SPARQLRequestParser(arguments.getRequestPath()).loadQueries();
+	    List<Request> requests = new SPARQLRequestParser(arguments.getRequestPath()).loadQueries();
+
+	    for (Request request : requests) {
+		System.out.println("Execution of request : \n" + request);
+
+		List<RDFTriple> triple = engine.query(request);
+
+	    }
+	    
 	} catch (IOException e) {
 	    System.err.println("Failed to open request file : '" + arguments.getDataPath() + "' : " + e.getMessage());	    
 	}

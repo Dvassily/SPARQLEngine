@@ -1,7 +1,6 @@
 package nosqlRDF.requests;
 
 public class Condition {
-
     private String subject;
     private String predicat;
     private String object;

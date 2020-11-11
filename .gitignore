@@ -1,2 +1,4 @@
 target/
 Datasets_100K_500K_1M/
+.idea/
+STAR_ALL_workload.queryset
