@@ -1,4 +1,4 @@
-package nosqlRDF;
+package nosqlRDF.utils;
 
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.ParameterException;

@@ -1,4 +1,4 @@
-package nosqlRDF;
+package nosqlRDF.utils;
 
 public class BenchmarkEngine {
     private String feature;

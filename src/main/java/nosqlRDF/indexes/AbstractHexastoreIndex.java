@@ -1,7 +1,10 @@
 package nosqlRDF.indexes;
 
+import nosqlRDF.InvalidQueryArgument;
+
 import nosqlRDF.datas.Dictionary;
 import nosqlRDF.datas.RDFTriple;
+import nosqlRDF.InvalidQueryArgument;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -43,7 +46,11 @@ public abstract class AbstractHexastoreIndex {
      *
      * @param x the identifier of the entity whose value from dictionary correponds to the {entityKeySize} most significant bits
      */
-    protected Set<RDFTriple> findYZ(String x) {
+    protected Set<RDFTriple> findYZ(String x) throws InvalidQueryArgument {
+	if (! dictionary.contains(x)) {
+	    throw new InvalidQueryArgument(x);
+	}
+	
 	BigInteger xKey = dictionary.getKey(x);
 	BigInteger keyLowerBound = composeKeyInternal(xKey, BigInteger.valueOf(0), BigInteger.valueOf(0));
 	BigInteger keyUpperBound = composeKeyInternal(xKey.add(BigInteger.valueOf(1)), BigInteger.valueOf(0), BigInteger.valueOf(0)).subtract(BigInteger.valueOf(1));
@@ -57,13 +64,30 @@ public abstract class AbstractHexastoreIndex {
      * @param x the identifier of the entity whose value from dictionary correponds to the {entityKeySize} most significant bits of the resultings triple
      * @param y the identifier of the entity whose value from dictionary correponds to the {entityKeySize} bits situated just after the {entityKeySize} most significant bits of the resulting triple
      */
-    protected Set<RDFTriple> findZ(String x, String y) {
+    protected Set<RDFTriple> findZ(String x, String y) throws InvalidQueryArgument {
+	if (! dictionary.contains(x)) {
+	    throw new InvalidQueryArgument(x);
+	}
+
+	if (! dictionary.contains(y)) {
+	    throw new InvalidQueryArgument(y);
+	}
+
+
+
 	
 	BigInteger xKey = dictionary.getKey(x);
 	BigInteger yKey = dictionary.getKey(y);
 
+	System.out.println(" - " + y + " : " + xKey);
+	
     	BigInteger keyLowerBound = composeKeyInternal(xKey, yKey, BigInteger.valueOf(0));
 	BigInteger keyUpperBound = composeKeyInternal(xKey, yKey.add(BigInteger.valueOf(1)), BigInteger.valueOf(0)).subtract(BigInteger.valueOf(1));
+
+	
+	System.out.println("lb : " + keyLowerBound);
+	System.out.println("ub : " + keyUpperBound);
+
 	
 	return valuesBetween(keyLowerBound, keyUpperBound);	
     }
@@ -76,7 +100,11 @@ public abstract class AbstractHexastoreIndex {
     private Set<RDFTriple> valuesBetween(BigInteger keyLowerBound, BigInteger keyUpperBound) {
         BigInteger lowerBound =  content.ceilingKey(keyLowerBound);
 	BigInteger upperBound =  content.floorKey(keyUpperBound);
-	
+
+	if (lowerBound.compareTo(upperBound) >= 0) {
+	    return new HashSet<>();
+	}
+
 	return new HashSet<>(content.subMap(lowerBound, true, upperBound, true).values());
     }
 

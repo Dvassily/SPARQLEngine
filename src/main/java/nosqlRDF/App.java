@@ -4,9 +4,9 @@ import nosqlRDF.requests.SPARQLRequestParser;
 import nosqlRDF.requests.Request;
 import nosqlRDF.datas.RDFTriple;
 
+import nosqlRDF.utils.*;
 import java.io.IOException;
-import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;
+
 import com.beust.jcommander.ParameterException;
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -48,8 +48,19 @@ public class App
 	    for (Request request : requests) {
 		System.out.println("Execution of request : \n" + request);
 
-		List<RDFTriple> triple = engine.query(request);
+		try {
+		    List<RDFTriple> triples = engine.query(request);
 
+		    System.out.println("Nombre de résultats : " + triples.size());
+
+		    for (RDFTriple triple : triples) {
+			System.out.println(triple);
+
+		    }
+
+		} catch (InvalidQueryArgument e) {
+		    e.printStackTrace();
+		}
 	    }
 	    
 	} catch (IOException e) {

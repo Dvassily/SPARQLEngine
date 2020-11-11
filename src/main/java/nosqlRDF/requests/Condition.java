@@ -2,15 +2,15 @@ package nosqlRDF.requests;
 
 public class Condition {
     private String subject;
-    private String predicat;
+    private String predicate;
     private String object;
 
     public String getSubject() {
         return subject;
     }
 
-    public String getPredicat() {
-        return predicat;
+    public String getPredicate() {
+        return predicate;
     }
 
     public String getObject() {
@@ -21,8 +21,8 @@ public class Condition {
         return Issubject;
     }
 
-    public boolean isIspredicat() {
-        return Ispredicat;
+    public boolean isIspredicate() {
+        return Ispredicate;
     }
 
     public boolean isIsobject() {
@@ -30,14 +30,12 @@ public class Condition {
     }
 
     private boolean Issubject;
-    private boolean Ispredicat;
+    private boolean Ispredicate;
     private boolean Isobject;
 
-    public Condition(String subjet, String predicat, String object) {
+    public Condition(String subjet, String predicate, String object) {
         this.subject = subjet;
-        this.predicat = predicat;
+        this.predicate = predicate;
         this.object = object;
     }
-
-
 }

@@ -1,4 +1,4 @@
-package nosqlRDF;
+package nosqlRDF.utils;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.JCommander;

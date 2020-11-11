@@ -4,15 +4,15 @@ import nosqlRDF.datas.RDFTriple;
 import nosqlRDF.datas.Dictionary;
 import nosqlRDF.indexes.*;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 import java.io.File;
 import java.io.Reader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+
+import nosqlRDF.requests.Condition;
+import nosqlRDF.requests.Request;
 import org.eclipse.rdf4j.rio.RDFFormat;
 
 import fr.lirmm.graphik.graal.api.core.Atom;
@@ -38,57 +38,68 @@ public class SPARQLEngine {
      *
      * @param dataPath The path towards the RDF file
      */
-    public void parseData(String dataPath) throws FileNotFoundException  {
-	ArrayList<Atom> atoms = new ArrayList<Atom>();
+    public void parseData(String dataPath) throws FileNotFoundException {
+        ArrayList<Atom> atoms = new ArrayList<Atom>();
 
-	RDFParser parser = new RDFParser(new File(dataPath), RDFFormat.RDFXML);
-	
-	while(parser.hasNext()) {
-	    Object element = parser.next();
-	    
-	    if(element instanceof Atom) {
-		Atom dataTriple = (Atom) element;
-		
-		String subject = dataTriple.getTerm(0).toString();
-		String predicate = dataTriple.getPredicate().getIdentifier().toString();
-		String object = dataTriple.getTerm(1).toString();
+        RDFParser parser = new RDFParser(new File(dataPath), RDFFormat.RDFXML);
 
-		insertTriple(subject, predicate, object);
-	    }
-	}
-	
-	parser.close();
+        while (parser.hasNext()) {
+            Object element = parser.next();
+
+            if (element instanceof Atom) {
+                Atom dataTriple = (Atom) element;
+
+                String subject = dataTriple.getTerm(0).toString();
+                String predicate = dataTriple.getPredicate().getIdentifier().toString();
+                String object = dataTriple.getTerm(1).toString();
+
+                insertTriple(subject, predicate, object);
+            }
+        }
+
+        parser.close();
 
     }
 
     /**
      * Insert an RDF triple
      *
-     * @param subject The triple subject
+     * @param subject    The triple subject
      * @param predicate, The triple predicate
-     * @param object, The triple object
+     * @param object,    The triple object
      */
     public void insertTriple(String subject, String predicate, String object) {
-	triples.add(new RDFTriple(subject, predicate, object));	
+        triples.add(new RDFTriple(subject, predicate, object));
     }
 
     /**
      * Intialize the dictionary and the 6 indexes
      */
     public void initDictionaryAndIndexes() {
-	initDictionary();
-	initIndexes();
+        initDictionary();
+        initIndexes();
     }
 
     /**
      * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
      * Complexity is O(log(n))
      *
-     * @param subject The input subject
+     * @param predicate The input subject
+     * @param object    The input predicate
+     */
+    public Set<RDFTriple> findSubject(String predicate, String object) throws InvalidQueryArgument {
+        return posIndex.findSubject(predicate, object);
+    }
+
+    /**
+     * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
+     * Complexity is O(log(n))
+     *
+     * @param subject   The input subject
      * @param predicate The input predicate
      */
-    public Set<RDFTriple> findObject(String subject, String predicate) {
-	return spoIndex.findObject(subject, predicate);
+    public Set<RDFTriple> findObject(String subject, String predicate) throws InvalidQueryArgument {
+        return spoIndex.findObject(subject, predicate);
     }
 
     /**
@@ -96,20 +107,21 @@ public class SPARQLEngine {
      * Complexity is O(log(n))
      *
      * @param subject The input subject
-     * @param object The input predicate
+     * @param object  The input predicate
      */
-    public Set<RDFTriple> findPredicate(String subject, String object) {
-	return ospIndex.findPredicate(subject, object);
+    public Set<RDFTriple> findPredicate(String subject, String object) throws InvalidQueryArgument {
+        return ospIndex.findPredicate(subject, object);
     }
 
     /**
      * Find the set of RDF triple that corresponds to a specific subject
      * Complexity is O(log(n))
-     *     *
+     * *
+     *
      * @param subject The input subject
      */
-    public Set<RDFTriple> findPredicateObject(String subject) {
-	return spoIndex.findPredicateObject(subject);
+    public Set<RDFTriple> findPredicateObject(String subject) throws InvalidQueryArgument {
+        return spoIndex.findPredicateObject(subject);
     }
 
 
@@ -119,74 +131,85 @@ public class SPARQLEngine {
      *
      * @param object The input subject
      */
-    public Set<RDFTriple> findSubjectPredicate(String object) {
-	return ospIndex.findSubjectPredicate(object);
+    public Set<RDFTriple> findSubjectPredicate(String object) throws InvalidQueryArgument {
+        return ospIndex.findSubjectPredicate(object);
     }
 
     /**
      * Find the set of RDF triple that corresponds to a specific predicate
      * Complexity is O(log(n))
-     *     *
+     * *
+     *
      * @param predicate The input predicate
      */
-    public Set<RDFTriple> findSubjectObject(String predicate) {
-	return psoIndex.findSubjectObject(predicate);
+    public Set<RDFTriple> findSubjectObject(String predicate) throws InvalidQueryArgument {
+        return psoIndex.findSubjectObject(predicate);
     }
 
-    public List<RDFTriple> query(Request request)  {
-	Set<RDFTriple> resultSet = new HashSet<>();
-	Map<Condition, Set<RDFTriple>> intermediaryResults = new HashMap<>();
-	
-	for (Condition condition : request.getConditions()) {
-	    resultSet.put(condition, findSubject(condition.getPredicate(), condition.getObject()));
-	}
+    public List<RDFTriple> query(Request request) throws InvalidQueryArgument {
+        Set<RDFTriple> resultSet = null;
+        Map<Condition, Set<RDFTriple>> intermediaryResults = new HashMap<>();
 
-	Condition = null;
-	for (Condition condition : intermediaryResults.keySet()) {
-	    
-	}
+        for (Condition condition : request.getConditions()) {
+            intermediaryResults.put(condition, findSubject(condition.getPredicate(), condition.getObject()));
+        }
+
+        for (Condition condition: request.getConditions()) {
+
+            Set<RDFTriple> tempResult = intermediaryResults.get(condition);
+
+            if(resultSet == null) {
+                resultSet = tempResult;
+            } else {
+                resultSet.retainAll(tempResult);
+            }
+        }
+
+        return new LinkedList<>(resultSet);
     }
+
+
 
     /**
      * Find the number of entities loaded in the engine
      */
     public int entityCount() {
-	return dictionary.entityCount();
+        return dictionary.entityCount();
     }
 
     private void initDictionary() {
-	for (RDFTriple triple : triples) {
-	    String subject = triple.getSubject();
-	    String predicate = triple.getPredicate();
-	    String object = triple.getObject();
+        for (RDFTriple triple : triples) {
+            String subject = triple.getSubject();
+            String predicate = triple.getPredicate();
+            String object = triple.getObject();
 
-	    if (! dictionary.contains(subject)) {
-		dictionary.insert(subject);
-	    }
-	    
-	    if (! dictionary.contains(predicate)) {
-		dictionary.insert(predicate);
-	    }
+            if (!dictionary.contains(subject)) {
+                dictionary.insert(subject, true);
+            }
 
-	    if (! dictionary.contains(object)) {
-		dictionary.insert(object);
-	    }
-	}
+            if (!dictionary.contains(predicate)) {
+                dictionary.insert(predicate, false);
+            }
+
+            if (!dictionary.contains(object)) {
+                dictionary.insert(object, true);
+            }
+        }
     }
 
     private void initIndexes() {
-	spoIndex = new SPOIndex(dictionary);
-	psoIndex = new PSOIndex(dictionary);
-	ospIndex = new OSPIndex(dictionary);
-	sopIndex = new SOPIndex(dictionary);
-	posIndex = new POSIndex(dictionary);
-	opsIndex= new OPSIndex(dictionary);
+        spoIndex = new SPOIndex(dictionary);
+        psoIndex = new PSOIndex(dictionary);
+        ospIndex = new OSPIndex(dictionary);
+        sopIndex = new SOPIndex(dictionary);
+        posIndex = new POSIndex(dictionary);
+        opsIndex = new OPSIndex(dictionary);
 
-	spoIndex.build(triples);
-	ospIndex.build(triples);
-	psoIndex.build(triples);
-	sopIndex.build(triples);
-	posIndex.build(triples);
-	opsIndex.build(triples);
+        spoIndex.build(triples);
+        ospIndex.build(triples);
+        psoIndex.build(triples);
+        sopIndex.build(triples);
+        posIndex.build(triples);
+        opsIndex.build(triples);
     }
 }

@@ -1,6 +1,7 @@
 package nosqlRDF.datas;
 
 import java.util.Set;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.math.BigInteger;
@@ -11,6 +12,7 @@ import java.math.BigInteger;
  */
 public class Dictionary {
     private Map<String, BigInteger> dictionary = new HashMap<>();
+    private Set<String> resources = new HashSet<>();
     private Map<BigInteger, String> reverseDictionary = new HashMap<>();
     private BigInteger counter = BigInteger.valueOf(0);
 
@@ -30,15 +32,19 @@ public class Dictionary {
      *
      * @return boolean True if the insertion succeeded, false otherwise (e.g. the entity is already present in the dictionary)
      */
-    public boolean insert(String entity) {
+    public boolean insert(String entity, boolean resource) {
 	if (dictionary.containsKey(entity)) {
 	    return false;
 	}
-	
+
 	dictionary.put(entity, counter);
 	reverseDictionary.put(counter, entity);
 	counter = counter.add(BigInteger.valueOf(1));
 
+	if (resource) {
+	    resources.add(entity);
+	}
+	
 	return true;
     }
 
@@ -48,6 +54,10 @@ public class Dictionary {
 
     public int entityCount() {
 	return dictionary.size();
+    }
+
+    public Set<String> getResources() {
+	return resources;
     }
 
     @Override

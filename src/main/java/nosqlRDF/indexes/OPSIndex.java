@@ -1,5 +1,7 @@
 package nosqlRDF.indexes;
 
+import nosqlRDF.InvalidQueryArgument;
+
 import nosqlRDF.datas.Dictionary;
 import nosqlRDF.datas.RDFTriple;
 
@@ -11,11 +13,11 @@ public class OPSIndex extends AbstractHexastoreIndex {
 	super(dictionary);
     }
     
-    public Set<RDFTriple> findPredicateSubject(String object) {
+    public Set<RDFTriple> findPredicateSubject(String object) throws InvalidQueryArgument {
 	return findYZ(object);
     }
 
-    public Set<RDFTriple> findSubject(String object, String predicate) {
+    public Set<RDFTriple> findSubject(String object, String predicate) throws InvalidQueryArgument {
 	return findZ(object, predicate);
     }
 
