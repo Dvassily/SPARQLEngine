@@ -1,5 +1,9 @@
 package nosqlRDF;
 
+import nosqlRDF.datas.RDFTriple;
+import nosqlRDF.datas.Dictionary;
+import nosqlRDF.indexes.*;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -88,25 +92,14 @@ public class SPARQLEngine {
     }
 
     /**
-     * Find the set of RDF triple that corresponds to a specific object and a specific subject
+     * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
      * Complexity is O(log(n))
      *
-     * @param object The input object
      * @param subject The input subject
+     * @param object The input predicate
      */
-    public Set<RDFTriple> findPredicate(String object, String subject) {
-	return ospIndex.findPredicate(object,subject);
-    }
-
-    /**
-     * Find the set of RDF triple that corresponds to a specific object and a specific predicate
-     * Complexity is O(log(n))
-     *
-     * @param object The input object
-     * @param predicate The input predicate
-     */
-    public Set<RDFTriple> findSubject(String object, String predicate) {
-	return opsIndex.findSubject(object,predicate);
+    public Set<RDFTriple> findPredicate(String subject, String object) {
+	return ospIndex.findPredicate(subject, object);
     }
 
     /**
@@ -121,10 +114,10 @@ public class SPARQLEngine {
 
 
     /**
-     * Find the set of RDF triple that corresponds to a specific specific object
+     * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
      * Complexity is O(log(n))
      *     *
-     * @param object The input object
+     * @param object The input subject
      */
     public Set<RDFTriple> findSubjectPredicate(String object) {
 	return ospIndex.findSubjectPredicate(object);

@@ -1,5 +1,7 @@
 package nosqlRDF;
 
+import nosqlRDF.datas.RDFTriple;
+
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;

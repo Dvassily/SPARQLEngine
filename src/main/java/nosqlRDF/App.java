@@ -1,5 +1,8 @@
 package nosqlRDF;
 
+import nosqlRDF.requests.SPARQLRequestParser;
+
+import java.io.IOException;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
@@ -35,7 +38,15 @@ public class App
 	}
 	
 	engine.initDictionaryAndIndexes();
+	
+	String query = "SELECT ?v0 WHERE { ?v0 <http://schema.org/eligibleRegion> <http://db.uwaterloo.ca/~galuc/wsdbm/Country137> . }";
 
+	try {
+	    new SPARQLRequestParser(arguments.getRequestPath()).loadQueries();
+	} catch (IOException e) {
+	    System.err.println("Failed to open request file : '" + arguments.getDataPath() + "' : " + e.getMessage());	    
+	}
+	
 	benchmarkEngine.end();
 
 	System.out.println("Benchmarks : ");
