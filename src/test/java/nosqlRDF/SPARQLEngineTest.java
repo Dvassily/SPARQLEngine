@@ -41,10 +41,24 @@ public class SPARQLEngineTest
     }
 
     @Test
+    public void testFindSubject() {
+	RDFTriple triple = engine.findSubject(ABRAHAM_LINCOLN_NAME_ENTITY, HAS_NAME_PREDICATE).iterator().next();
+
+	assertEquals(ABRAHAM_LINCOLN_ENTITY, triple.getSubject());
+    }
+
+    @Test
     public void testFindObject() {
 	RDFTriple triple = engine.findObject(ABRAHAM_LINCOLN_ENTITY, HAS_NAME_PREDICATE).iterator().next();
 
 	assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
+    }
+
+    @Test
+    public void testFindPredicate() {
+	RDFTriple triple = engine.findPredicate(ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY, ABRAHAM_LINCOLN_ENTITY).iterator().next();
+
+	assertEquals(BORN_ON_DATE_PREDICATE, triple.getPredicate());	
     }
 
     @Test
@@ -65,12 +79,7 @@ public class SPARQLEngineTest
 	}
     }
 
-    @Test
-    public void testFindPredicate() {
-	RDFTriple triple = engine.findPredicate(ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY, ABRAHAM_LINCOLN_ENTITY).iterator().next();
 
-	assertEquals(BORN_ON_DATE_PREDICATE, triple.getPredicate());	
-    }
 
     @Test
     public void testFindSubjectPredicate() {

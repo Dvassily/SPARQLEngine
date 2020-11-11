@@ -88,14 +88,25 @@ public class SPARQLEngine {
     }
 
     /**
-     * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
+     * Find the set of RDF triple that corresponds to a specific object and a specific subject
      * Complexity is O(log(n))
      *
+     * @param object The input object
      * @param subject The input subject
+     */
+    public Set<RDFTriple> findPredicate(String object, String subject) {
+	return ospIndex.findPredicate(object,subject);
+    }
+
+    /**
+     * Find the set of RDF triple that corresponds to a specific object and a specific predicate
+     * Complexity is O(log(n))
+     *
+     * @param object The input object
      * @param predicate The input predicate
      */
-    public Set<RDFTriple> findPredicate(String subject, String object) {
-	return ospIndex.findPredicate(subject, object);
+    public Set<RDFTriple> findSubject(String object, String predicate) {
+	return opsIndex.findSubject(object,predicate);
     }
 
     /**
@@ -110,10 +121,10 @@ public class SPARQLEngine {
 
 
     /**
-     * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
+     * Find the set of RDF triple that corresponds to a specific specific object
      * Complexity is O(log(n))
      *     *
-     * @param subject The input subject
+     * @param object The input object
      */
     public Set<RDFTriple> findSubjectPredicate(String object) {
 	return ospIndex.findSubjectPredicate(object);
