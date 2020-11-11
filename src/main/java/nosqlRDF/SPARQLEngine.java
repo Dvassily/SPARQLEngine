@@ -116,7 +116,7 @@ public class SPARQLEngine {
     /**
      * Find the set of RDF triple that corresponds to a specific subject and a specific predicate
      * Complexity is O(log(n))
-     *     *
+     *
      * @param object The input subject
      */
     public Set<RDFTriple> findSubjectPredicate(String object) {
@@ -133,6 +133,19 @@ public class SPARQLEngine {
 	return psoIndex.findSubjectObject(predicate);
     }
 
+    public List<RDFTriple> query(Request request)  {
+	Set<RDFTriple> resultSet = new HashSet<>();
+	Map<Condition, Set<RDFTriple>> intermediaryResults = new HashMap<>();
+	
+	for (Condition condition : request.getConditions()) {
+	    resultSet.put(condition, findSubject(condition.getPredicate(), condition.getObject()));
+	}
+
+	Condition = null;
+	for (Condition condition : intermediaryResults.keySet()) {
+	    
+	}
+    }
 
     /**
      * Find the number of entities loaded in the engine
