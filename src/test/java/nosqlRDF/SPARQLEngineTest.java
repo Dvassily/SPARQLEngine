@@ -1,8 +1,12 @@
 package nosqlRDF;
 
 import nosqlRDF.datas.RDFTriple;
+import nosqlRDF.requests.Request;
+import nosqlRDF.requests.Condition;
 import nosqlRDF.InvalidQueryArgument;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -21,6 +25,13 @@ public class SPARQLEngineTest
     private static final String WORKS_FOR_PREDICATE = "worksFor";
     private static final String PARIS_ENTITY = "Paris";
     private static final String EDF_ENTITY = "EDF";
+
+    private static final Condition cond1=new Condition("v0",BORN_ON_DATE_PREDICATE,ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY);
+    private static final Condition cond2=new Condition("v0",HAS_NAME_PREDICATE,ABRAHAM_LINCOLN_NAME_ENTITY);
+    private static final Condition cond3=new Condition(ALICE_ENTITY,"v0",PARIS_ENTITY);
+    private static final Condition cond4=new Condition(ALICE_ENTITY,WORKS_FOR_PREDICATE,"v0");
+
+    private List<Condition> conditions=new ArrayList<Condition>();
 
     private SPARQLEngine engine;
 
@@ -105,4 +116,31 @@ public class SPARQLEngineTest
         RDFTriple triple = triples.iterator().next();
         assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
     }
+///////Tests Requêtes////////
+   @Test
+   public void testReqCond1() {
+   conditions.add(0,cond1);
+   Request req=new Request("v0",conditions);
+   } 
+
+
+   @Test
+    public void testReqCond1Cond2() {
+    conditions.add(0,cond1);
+    conditions.add(1,cond2);
+    Request req=new Request("v0",conditions);
+    } 
+
+
+   @Test
+   public void testReqCond3() {
+   conditions.add(0,cond3);
+   Request req=new Request("v0",conditions);
+   } 
+
+   @Test
+   public void testReqCond4() {
+   conditions.add(0,cond4);
+   Request req=new Request("v0",conditions);
+   } 
 }
