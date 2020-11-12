@@ -76,24 +76,13 @@ public abstract class AbstractHexastoreIndex {
             throw new InvalidQueryArgument(y);
         }
 
-
-
-	
         BigInteger xKey = dictionary.getKey(x);
         BigInteger yKey = dictionary.getKey(y);
-
-
-        System.out.println(" - " + x + " : " + xKey);
-        System.out.println(" - " + y + " : " + yKey);
 
         BigInteger keyLowerBound = composeKeyInternal(xKey, yKey, BigInteger.valueOf(0));
         BigInteger keyUpperBound = composeKeyInternal(xKey, yKey.add(BigInteger.valueOf(1)), BigInteger.valueOf(0)).subtract(BigInteger.valueOf(1));
 
-	
-        System.out.println("lb : " + keyLowerBound);
-        System.out.println("ub : " + keyUpperBound);
 
-	
         return valuesBetween(keyLowerBound, keyUpperBound);
     }
 

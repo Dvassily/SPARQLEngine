@@ -25,6 +25,10 @@ public class BenchmarkEngine {
 	duration = -1;
     }
 
+    public long getDuration() {
+        return duration;
+    }
+
     @Override
     public String toString() {
 	return feature + " = " + duration + "ms";

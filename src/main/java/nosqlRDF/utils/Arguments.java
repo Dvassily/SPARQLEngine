@@ -5,16 +5,22 @@ import com.beust.jcommander.JCommander;
 
 public class Arguments {
     @Parameter(names = {"--data" , "-d"},
-	       description = "Provide path towards the .rdfxml data file",
+	       description = "Provide path containing data",
 	       validateWith = SourceValidator.class,
 	       required = true)
 	       private String dataPath = null;
 
-    @Parameter(names = {"--requests" , "-r"},
-	       description = "Provide path towards the .queryset request file",
+    @Parameter(names = {"--queries" , "-q"},
+	       description = "Provide path towards the folder containing queries",
 	       validateWith = SourceValidator.class,
 	       required = true)
 	       private String requestPath = null;
+
+	@Parameter(names = {"--verbose" , "-v"},
+			description = "verbose option to show execution log",
+			validateWith = SourceValidator.class,
+			required = true)
+	private String verbose = null;
 
     public void parse(String[] args) {
 	JCommander.newBuilder()
