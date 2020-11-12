@@ -40,9 +40,9 @@ public class SPARQLEngine {
      *
      * @param dataPath The path towards the RDF file
      */
-    public void parseData(String dataPath) throws FileNotFoundException {
+    public void parseData(String dataPath) throws FileNotFoundException{
+        
         ArrayList<Atom> atoms = new ArrayList<Atom>();
-
         RDFParser parser = new RDFParser(new File(dataPath), RDFFormat.RDFXML);
 
         while (parser.hasNext()) {
@@ -56,10 +56,9 @@ public class SPARQLEngine {
                 String object = dataTriple.getTerm(1).toString();
 
                 insertTriple(subject, predicate, object);
+                }
             }
-        }
-
-        parser.close();
+            parser.close();
 
     }
 
@@ -181,6 +180,20 @@ public class SPARQLEngine {
     public int entityCount() {
         return dictionary.entityCount();
     }
+
+    /** Writes the engine triples in a file */
+    public void WriteEngine() throws Exception{
+        File engineFile = new File("engineFile.txt");
+        FileWriter engineWriter= new FileWriter(engineFile);
+        engineWriter.write("triples de la base de données:\n");
+        engineWriter.flush();
+        for(RDFTriple triple: this.triples){
+            engineWriter.write("Subject: "+triple.getSubject()+" Predicate: "+triple.getPredicate()+" Object: "+triple.getObject()+"\n");
+            
+        } 
+        engineWriter.flush();
+        engineWriter.close();
+    } 
 
     private void initDictionary() {
         for (RDFTriple triple : triples) {
