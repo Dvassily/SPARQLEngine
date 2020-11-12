@@ -10,8 +10,9 @@ import nosqlRDF.utils.BenchmarkEngine;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Set;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class App {
@@ -83,27 +84,17 @@ public class App {
 
                     logger.info("================ Execution of request : " + "================");
                     logger.info(request.toString());
+                    Set<RDFTriple> triples = engine.query(request);
 
                     requestBenchEngine.begin();
-                    try {
-                        List<RDFTriple> triples = engine.query(request);
 
-                        logger.info("Nombre de résultats : " + triples.size() + "\n\n");
+                    logger.info("Nombre de résultats : " + triples.size() + "\n\n");
 
-                        for (RDFTriple triple : triples) {
-
-                        }
-
-                    } catch (InvalidQueryArgument e) {
-                        logger.info("Nombre de résultats : 0" + "\n\n");
-                    } finally {
-                        requestBenchEngine.end();
-                        logger.info("Temp d'execution de la requete : " + requestBenchEngine.getDuration() + "ms");
-                        meanExecutionTime.add(requestBenchEngine.getDuration());
-                    }
+                    requestBenchEngine.end();
+                    logger.info("Temp d'execution de la requete : " + requestBenchEngine.getDuration() + "ms");
+                    meanExecutionTime.add(requestBenchEngine.getDuration());
                 }
             }
-
         } catch (IOException e) {
             System.err.println("Failed to open request file : '" + arguments.getDataPath() + "' : " + e.getMessage());
         } finally {

@@ -92,10 +92,15 @@ public abstract class AbstractHexastoreIndex {
      * @return the set of triple in which keys are in the given range
      */
     private Set<RDFTriple> valuesBetween(BigInteger keyLowerBound, BigInteger keyUpperBound) {
+        System.out.println(keyUpperBound);
+        System.out.println(keyLowerBound);
         BigInteger lowerBound =  content.ceilingKey(keyLowerBound);
         BigInteger upperBound =  content.floorKey(keyUpperBound);
 
-        if (lowerBound.compareTo(upperBound) >= 0) {
+        System.out.println(dictionary);
+        System.out.println(content);
+
+        if (lowerBound.compareTo(upperBound) > 0) {
             return new HashSet<>();
         }
 

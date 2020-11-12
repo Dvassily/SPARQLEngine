@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.stream.Collectors;
 import nosqlRDF.requests.Condition;
 import nosqlRDF.requests.Request;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -147,26 +148,29 @@ public class SPARQLEngine {
         return psoIndex.findSubjectObject(predicate);
     }
 
-    public List<RDFTriple> query(Request request) throws InvalidQueryArgument {
+    public Set<RDFTriple> query(Request request) {
         Set<RDFTriple> resultSet = null;
         Map<Condition, Set<RDFTriple>> intermediaryResults = new HashMap<>();
+        Set<String> subjects = resultSet.stream().map(t -> t.getSubject()).collect(Collectors.toSet());
 
         for (Condition condition : request.getConditions()) {
-            intermediaryResults.put(condition, findSubject(condition.getPredicate(), condition.getObject()));
-        }
-
-        for (Condition condition: request.getConditions()) {
-
-            Set<RDFTriple> tempResult = intermediaryResults.get(condition);
-
-            if(resultSet == null) {
-                resultSet = tempResult;
-            } else {
-                resultSet.retainAll(tempResult);
+            try {
+                intermediaryResults.put(condition, findSubject(condition.getPredicate(), condition.getObject()));
+            // TODO : Rename ParameterNotFoundException
+            } catch(InvalidQueryArgument e) {
+                intermediaryResults.put(condition, new HashSet<>());
             }
         }
 
-        return new LinkedList<>(resultSet);
+        for (Condition condition: request.getConditions()) {
+            Set<RDFTriple> intermediaryResult = intermediaryResults.get(condition);
+
+            subjects.retainAll(intermediaryResults.keySet());
+        }
+
+        resultSet.retainAll(subjects);
+
+        return resultSet;
     }
 
 
