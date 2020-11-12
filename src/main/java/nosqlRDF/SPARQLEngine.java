@@ -149,28 +149,33 @@ public class SPARQLEngine {
     }
 
     public Set<RDFTriple> query(Request request) {
-        Set<RDFTriple> resultSet = null;
+        Set<RDFTriple> resultSet = new HashSet<>();
         Map<Condition, Set<RDFTriple>> intermediaryResults = new HashMap<>();
-        Set<String> subjects = resultSet.stream().map(t -> t.getSubject()).collect(Collectors.toSet());
-
+System.out.println(request.getConditions().size());
         for (Condition condition : request.getConditions()) {
             try {
-                intermediaryResults.put(condition, findSubject(condition.getPredicate(), condition.getObject()));
+                Set<RDFTriple> intermediaryResult = findSubject(condition.getPredicate(), condition.getObject());
+                resultSet.addAll(intermediaryResult);
+                intermediaryResults.put(condition, intermediaryResult);
             // TODO : Rename ParameterNotFoundException
             } catch(InvalidQueryArgument e) {
                 intermediaryResults.put(condition, new HashSet<>());
             }
         }
 
-        for (Condition condition: request.getConditions()) {
-            Set<RDFTriple> intermediaryResult = intermediaryResults.get(condition);
+        Set<String> subjects = new HashSet<>(dictionary.getResources());
+        for (Map.Entry<Condition, Set<RDFTriple>> entry : intermediaryResults.entrySet()) {
+            Set<RDFTriple> intermediaryResult = entry.getValue();
 
-            subjects.retainAll(intermediaryResults.keySet());
+            Set<String> intermediaryResultSubjects = intermediaryResult
+                .stream()
+                .map(t -> t.getSubject())
+                .collect(Collectors.toSet());
+
+            subjects.retainAll(intermediaryResultSubjects);
         }
 
-        resultSet.retainAll(subjects);
-
-        return resultSet;
+        return resultSet.stream().filter(t -> subjects.contains(t.getSubject())).collect(Collectors.toSet());
     }
 
 

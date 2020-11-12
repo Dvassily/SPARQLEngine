@@ -17,9 +17,7 @@ public class Arguments {
 	       private String requestPath = null;
 
 	@Parameter(names = {"--verbose" , "-v"},
-			description = "verbose option to show execution log",
-			validateWith = SourceValidator.class,
-			required = true)
+			description = "verbose option to show execution log")
 	private String verbose = null;
 
     public void parse(String[] args) {

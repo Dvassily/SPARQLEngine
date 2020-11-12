@@ -54,30 +54,30 @@ public class SPARQLRequestParser {
     }
 
     public Request parseQuery(String query) {
-	ParsedQuery pq = sparqlParser.parseQuery(query, null);
+        ParsedQuery pq = sparqlParser.parseQuery(query, null);
 
-	final String[] projection = {null};
+        final String[] projection = {null};
 
-	pq.getTupleExpr().visit(new QueryModelVisitorBase<RuntimeException>() {
-		public void meet(Projection proj) {
-		    projection[0] = proj.getProjectionElemList().getElements().get(0).getSourceName();
-		}
-	    });
+        pq.getTupleExpr().visit(new QueryModelVisitorBase<RuntimeException>() {
+                public void meet(Projection proj) {
+                    projection[0] = proj.getProjectionElemList().getElements().get(0).getSourceName();
+                }
+            });
 
 
-	List<StatementPattern> patterns = StatementPatternCollector.process(pq.getTupleExpr());
-	List<Condition> conditions = new LinkedList<>();
+        List<StatementPattern> patterns = StatementPatternCollector.process(pq.getTupleExpr());
+        List<Condition> conditions = new LinkedList<>();
 	
-	for (StatementPattern pattern: patterns) {
-	    String subject = pattern.getSubjectVar().getName();
-	    String predicat = pattern.getPredicateVar().getValue().stringValue();
-	    String object = pattern.getObjectVar().getValue().stringValue();
-	    Condition cond = new Condition(subject, predicat, object);
+        for (StatementPattern pattern: patterns) {
+            String subject = pattern.getSubjectVar().getName();
+            String predicat = pattern.getPredicateVar().getValue().stringValue();
+            String object = pattern.getObjectVar().getValue().stringValue();
+            Condition cond = new Condition(subject, predicat, object);
 
-	    conditions.add(cond);
-	}
+            conditions.add(cond);
+        }
 
 
-	return new Request(projection[0], conditions);
+        return new Request(projection[0], conditions);
 	}
 }

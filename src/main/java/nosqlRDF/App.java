@@ -16,24 +16,8 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class App {
-
-    public static List<String> listFilesForFolder(final File folder) {
-        List<String> filesPath = new ArrayList<>();
-
-        for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                listFilesForFolder(fileEntry);
-            } else {
-                filesPath.add(fileEntry.getAbsolutePath());
-            }
-        }
-
-        return filesPath;
-    }
-
     public static void main(String[] args) {
         Arguments arguments = new Arguments();
-        Logger logger = Logger.getLogger(App.class.getName());
 
         try {
             arguments.parse(args);
@@ -45,72 +29,27 @@ public class App {
             return;
         }
 
-        SPARQLEngine engine = new SPARQLEngine();
-
-        BenchmarkEngine benchmarkEngine = new BenchmarkEngine("Dictionary and hexastore indexes construction");
-        benchmarkEngine.begin();
-
-        logger.info("Started Parsing data File");
-
         try {
-            engine.parseData(arguments.getDataPath());
-        } catch (FileNotFoundException e) {
-            logger.warning("Error data file not found");
-            return;
+        List<String> queryFiles = findQueryFiles(arguments.getRequestPath());
+
+        for (String queryFile : queryFiles) {
+            new Runner(arguments.getDataPath(), queryFile, "output.txt").run();
         }
 
-        benchmarkEngine.end();
-
-        engine.initDictionaryAndIndexes();
-        logger.info("End parsing data file and contructing indexes");
-
-        BenchmarkEngine requestsBenchEngine = new BenchmarkEngine("Request parsing and execution");
-        requestsBenchEngine.begin();
-
-        ArrayList<Long> meanExecutionTime = new ArrayList<>();
-
-        try {
-
-            logger.info("Started executing requests : ");
-
-            for (String filePath : listFilesForFolder(new File(arguments.getRequestPath()))) {
-
-                logger.info("================================   Started executing request file : " + filePath + "================================ ");
-
-                List<Request> requests = new SPARQLRequestParser(filePath).loadQueries();
-
-                for (Request request : requests) {
-                    BenchmarkEngine requestBenchEngine = new BenchmarkEngine("Request benchmark");
-
-                    logger.info("================ Execution of request : " + "================");
-                    logger.info(request.toString());
-                    Set<RDFTriple> triples = engine.query(request);
-
-                    requestBenchEngine.begin();
-
-                    logger.info("Nombre de résultats : " + triples.size() + "\n\n");
-
-                    requestBenchEngine.end();
-                    logger.info("Temp d'execution de la requete : " + requestBenchEngine.getDuration() + "ms");
-                    meanExecutionTime.add(requestBenchEngine.getDuration());
-                }
-            }
         } catch (IOException e) {
             System.err.println("Failed to open request file : '" + arguments.getDataPath() + "' : " + e.getMessage());
-        } finally {
-            requestsBenchEngine.end();
+        }
+    }
+
+    private static List<String> findQueryFiles(String queryDirectory) {
+        List<String> filesPath = new ArrayList<>();
+
+        for (final File fileEntry : new File(queryDirectory).listFiles()) {
+            if (! fileEntry.isDirectory()) {
+                filesPath.add(fileEntry.getAbsolutePath());
+            }
         }
 
-
-        System.out.println("Benchmarks : ");
-        logger.info(" * " + benchmarkEngine);
-        logger.info(" * " + requestsBenchEngine);
-
-        long sumExecutionTime = 0;
-        for(Long executionTime: meanExecutionTime) {
-            sumExecutionTime += executionTime;
-        }
-
-        logger.info(" Moyenne d'exeuction des requetes : " + (double) sumExecutionTime / meanExecutionTime.size()  + "ms");
+        return filesPath;
     }
 }
