@@ -10,7 +10,8 @@ import java.io.Reader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
-
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import nosqlRDF.requests.Condition;
 import nosqlRDF.requests.Request;
 import org.eclipse.rdf4j.rio.RDFFormat;
