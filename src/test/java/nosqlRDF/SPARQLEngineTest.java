@@ -121,26 +121,42 @@ public class SPARQLEngineTest
    public void testReqCond1() {
    conditions.add(0,cond1);
    Request req=new Request("v0",conditions);
+   RDFTriple res=engine.query(req).iterator().next();
+   assertEquals(ABRAHAM_LINCOLN_ENTITY,res.getSubject());
+   assertEquals(BORN_ON_DATE_PREDICATE,res.getPredicate());
+   assertEquals(ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY,res.getObject());
    } 
 
 
    @Test
-    public void testReqCond1Cond2() {
-    conditions.add(0,cond1);
-    conditions.add(1,cond2);
+    public void testReqCond2() {
+    conditions.add(0,cond2);
     Request req=new Request("v0",conditions);
-    } 
+    RDFTriple res=engine.query(req).iterator().next();
+    assertEquals(ABRAHAM_LINCOLN_ENTITY,res.getSubject());
+    assertEquals(HAS_NAME_PREDICATE,res.getPredicate());
+    assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY,res.getObject());
+    }
 
 
-   @Test
-   public void testReqCond3() {
-   conditions.add(0,cond3);
-   Request req=new Request("v0",conditions);
-   } 
 
-   @Test
-   public void testReqCond4() {
-   conditions.add(0,cond4);
-   Request req=new Request("v0",conditions);
-   } 
+//    @Test
+//    public void testReqCond3() {
+//    conditions.add(0,cond3);
+//    Request req=new Request("v0",conditions);
+//    RDFTriple res=engine.query(req).iterator().next();
+//    assertEquals(ALICE_ENTITY,res.getSubject());
+//    assertEquals(LIVES_IN_PREDICATE,res.getPredicate());
+//    assertEquals(PARIS_ENTITY,res.getObject());
+//    } 
+
+//    @Test
+//    public void testReqCond4() {
+//    conditions.add(0,cond4);
+//    Request req=new Request("v0",conditions);
+//    RDFTriple res=engine.query(req).iterator().next();
+//    assertEquals(ALICE_ENTITY,res.getSubject());
+//    assertEquals(WORKS_FOR_PREDICATE,res.getPredicate());
+//    assertEquals(EDF_ENTITY,res.getObject());   
+//    } 
 }
