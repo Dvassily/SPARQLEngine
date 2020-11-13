@@ -18,10 +18,35 @@ public class SPARQLRequestTest
     private SPARQLRequestParser requestsParser;
     private SPARQLEngine engine=new SPARQLEngine();
 
+            //  @Before
+            //  public void initialize(){
+            //      try{
+            //          engine.parseData("/home/e20190009602/TPNoSQL/Projet/Datasets_100K_500K_1M/100K.rdfxml");
+            //      } catch(FileNotFoundException f){
+            //          System.out.println("File not found");
+            //      }
+
+            //      engine.initDictionaryAndIndexes();
+            //  }
+
+            // @Test
+            // public void testNationality(){
+            //     try{
+            //       requestsParser = new SPARQLRequestParser("/home/e20190009602/TPNoSQL/Projet/Requetes/STAR_Queries_100_1000_10000/100/Q_1_nationality_100.queryset");
+            //       List<Request> requests = requestsParser.loadQueries();
+            //       for(Request request:requests){
+            //           Set<RDFTriple> result=engine.query(request);
+            //           System.out.println("Taille du résultat: "+result.size());
+            //       }
+            //     } catch(Exception e){
+            //         System.out.println("Requêtes non chargées: "+ e);
+            //     }
+
+            // }
   //  @Before
   //  public void initialize(){
   //      try{
-  //          engine.parseData("/home/e20190009602/TPNoSQL/Projet/Datasets_100K_500K_1M/100K.rdfxml");
+  //          engine.parseData("/home/e20190009602/TPNoSQL/Projet/Datasets_100K_500K_1M/500K.rdfxml");
   //      } catch(FileNotFoundException f){
   //          System.out.println("File not found");
   //      }
@@ -30,14 +55,13 @@ public class SPARQLRequestTest
   //  }
 
   // @Test
-  // public void testNationality(){
+  // public void testWorkload(){
   //     try{
-  //       requestsParser = new SPARQLRequestParser("/home/e20190009602/TPNoSQL/Projet/Requetes/STAR_Queries_100_1000_10000/100/Q_1_nationality_100.queryset");
+  //       requestsParser = new SPARQLRequestParser("/home/e20190009602/TPNoSQL/Projet/Requetes/STAR_ALL_workload.queryset");
   //       List<Request> requests = requestsParser.loadQueries();
-  //       for(Request request:requests){
-  //           Set<RDFTriple> result=engine.query(request);
-  //           System.out.println("Taille du résultat: "+result.size());
-  //       }
+  //       // for(Request request:requests){
+  //       //     Set<RDFTriple> result=engine.query(request);
+  //       // }
   //     } catch(Exception e){
   //         System.out.println("Requêtes non chargées: "+ e);
   //     }
