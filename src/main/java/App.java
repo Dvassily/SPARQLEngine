@@ -1,11 +1,10 @@
-package nosqlRDF;
-
 import com.beust.jcommander.ParameterException;
 import nosqlRDF.datas.RDFTriple;
 import nosqlRDF.requests.Request;
 import nosqlRDF.requests.SPARQLRequestParser;
 import nosqlRDF.utils.Arguments;
 import nosqlRDF.utils.BenchmarkEngine;
+import nosqlRDF.Runner;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,16 +28,26 @@ public class App {
             return;
         }
 
-        try {
         List<String> queryFiles = findQueryFiles(arguments.getRequestPath());
 
+        // WorkloadOutputWriter workloadOutputWriter = new WorkloadOutputWriter("workload-stats.csv"));
+        // workloadoutputwriter.insertHeader();
+
         for (String queryFile : queryFiles) {
-            new Runner(arguments.getDataPath(), queryFile, "output.txt").run();
+            try {
+                Runner runner = new Runner(arguments.getDataPath(), queryFile, arguments.getOutputPath(), arguments.isVerbose());
+
+                try {
+                    runner.run();
+                } catch (IOException e) {
+                    System.err.println("Failed to load request file : " + e.getMessage());
+                }
+            } catch (IOException e) {
+                System.err.println("Failed to load data file : '" + e.getMessage());
+            }
         }
 
-        } catch (IOException e) {
-            System.err.println("Failed to open request file : '" + arguments.getDataPath() + "' : " + e.getMessage());
-        }
+        // workloadOutputWriter.close();
     }
 
     private static List<String> findQueryFiles(String queryDirectory) {

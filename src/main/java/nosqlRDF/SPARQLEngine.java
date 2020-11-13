@@ -3,6 +3,8 @@ package nosqlRDF;
 import nosqlRDF.datas.RDFTriple;
 import nosqlRDF.datas.Dictionary;
 import nosqlRDF.indexes.*;
+import nosqlRDF.indexes.AbstractHexastoreIndex.HexastoreIndexType;
+import static nosqlRDF.indexes.AbstractHexastoreIndex.HexastoreIndexType.*;
 
 import java.util.*;
 import java.io.File;
@@ -28,12 +30,7 @@ import fr.lirmm.graphik.graal.io.rdf.RDFParser;
 public class SPARQLEngine {
     private Set<RDFTriple> triples = new HashSet<>();
     private Dictionary dictionary = new Dictionary();
-    private SPOIndex spoIndex = null;
-    private PSOIndex psoIndex = null;
-    private OSPIndex ospIndex = null;
-    private SOPIndex sopIndex = null;
-    private POSIndex posIndex = null;
-    private OPSIndex opsIndex = null;
+    private Map<HexastoreIndexType, AbstractHexastoreIndex> indexes = new HashMap<>();
 
     /**
      * Feed engine datas with an .rdfxml
@@ -56,10 +53,10 @@ public class SPARQLEngine {
                 String object = dataTriple.getTerm(1).toString();
 
                 insertTriple(subject, predicate, object);
-                }
             }
-            parser.close();
+        }
 
+        parser.close();
     }
 
     /**
@@ -89,7 +86,7 @@ public class SPARQLEngine {
      * @param object    The input predicate
      */
     public Set<RDFTriple> findSubject(String predicate, String object) throws InvalidQueryArgument {
-        return posIndex.findSubject(predicate, object);
+        return ((POSIndex) indexes.get(POS)).findSubject(predicate, object);
     }
 
     /**
@@ -100,7 +97,7 @@ public class SPARQLEngine {
      * @param predicate The input predicate
      */
     public Set<RDFTriple> findObject(String subject, String predicate) throws InvalidQueryArgument {
-        return spoIndex.findObject(subject, predicate);
+        return ((SPOIndex) indexes.get(SPO)).findObject(subject, predicate);
     }
 
     /**
@@ -111,7 +108,7 @@ public class SPARQLEngine {
      * @param object  The input predicate
      */
     public Set<RDFTriple> findPredicate(String subject, String object) throws InvalidQueryArgument {
-        return ospIndex.findPredicate(subject, object);
+        return ((OSPIndex) indexes.get(OSP)).findPredicate(subject, object);
     }
 
     /**
@@ -122,7 +119,7 @@ public class SPARQLEngine {
      * @param subject The input subject
      */
     public Set<RDFTriple> findPredicateObject(String subject) throws InvalidQueryArgument {
-        return spoIndex.findPredicateObject(subject);
+        return ((SPOIndex) indexes.get(SPO)).findPredicateObject(subject);
     }
 
 
@@ -133,7 +130,7 @@ public class SPARQLEngine {
      * @param object The input subject
      */
     public Set<RDFTriple> findSubjectPredicate(String object) throws InvalidQueryArgument {
-        return ospIndex.findSubjectPredicate(object);
+        return ((OSPIndex) indexes.get(OSP)).findSubjectPredicate(object);
     }
 
     /**
@@ -144,13 +141,13 @@ public class SPARQLEngine {
      * @param predicate The input predicate
      */
     public Set<RDFTriple> findSubjectObject(String predicate) throws InvalidQueryArgument {
-        return psoIndex.findSubjectObject(predicate);
+        return ((PSOIndex) indexes.get(PSO)).findSubjectObject(predicate);
     }
 
     public Set<RDFTriple> query(Request request) {
         Set<RDFTriple> resultSet = new HashSet<>();
         Map<Condition, Set<RDFTriple>> intermediaryResults = new HashMap<>();
-System.out.println(request.getConditions().size());
+
         for (Condition condition : request.getConditions()) {
             try {
                 Set<RDFTriple> intermediaryResult = findSubject(condition.getPredicate(), condition.getObject());
@@ -198,7 +195,15 @@ System.out.println(request.getConditions().size());
         } 
         engineWriter.flush();
         engineWriter.close();
-    } 
+    }
+
+    public int getRowsCount() {
+        return triples.size();
+    }
+
+    public Map<HexastoreIndexType, AbstractHexastoreIndex> getIndexes() {
+        return indexes;
+    }
 
     private void initDictionary() {
         for (RDFTriple triple : triples) {
@@ -221,18 +226,18 @@ System.out.println(request.getConditions().size());
     }
 
     private void initIndexes() {
-        spoIndex = new SPOIndex(dictionary);
-        psoIndex = new PSOIndex(dictionary);
-        ospIndex = new OSPIndex(dictionary);
-        sopIndex = new SOPIndex(dictionary);
-        posIndex = new POSIndex(dictionary);
-        opsIndex = new OPSIndex(dictionary);
+        indexes.put(SPO, new SPOIndex(dictionary));
+        indexes.put(PSO, new PSOIndex(dictionary));
+        indexes.put(OSP, new OSPIndex(dictionary));
+        indexes.put(SOP, new SOPIndex(dictionary));
+        indexes.put(POS, new POSIndex(dictionary));
+        indexes.put(OPS, new OPSIndex(dictionary));
 
-        spoIndex.build(triples);
-        ospIndex.build(triples);
-        psoIndex.build(triples);
-        sopIndex.build(triples);
-        posIndex.build(triples);
-        opsIndex.build(triples);
+        indexes.get(SPO).build(triples);
+        indexes.get(OSP).build(triples);
+        indexes.get(PSO).build(triples);
+        indexes.get(SOP).build(triples);
+        indexes.get(POS).build(triples);
+        indexes.get(OPS).build(triples);
     }
 }

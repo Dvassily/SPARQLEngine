@@ -4,21 +4,23 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.JCommander;
 
 public class Arguments {
-    @Parameter(names = {"--data" , "-d"},
-	       description = "Provide path containing data",
-	       validateWith = SourceValidator.class,
-	       required = true)
-	       private String dataPath = null;
+    @Parameter(names = {"-data" , "-d"},
+               description = "Provides path containing data",
+               required = true)
+               private String dataPath = null;
 
-    @Parameter(names = {"--queries" , "-q"},
-	       description = "Provide path towards the folder containing queries",
-	       validateWith = SourceValidator.class,
-	       required = true)
-	       private String requestPath = null;
+    @Parameter(names = {"-queries" , "-q"},
+               description = "Provides path towards the folder containing queries",
+               required = true)
+               private String requestPath = null;
 
-	@Parameter(names = {"--verbose" , "-v"},
-			description = "verbose option to show execution log")
-	private String verbose = null;
+    @Parameter(names = {"-output" , "-o"},
+               description = "Provides path towards the output directory")
+               private String outputPath = null;
+
+	@Parameter(names = {"-verbose" , "-v"},
+               description = "verbose option to show execution log")
+               private boolean verbose = false;
 
     public void parse(String[] args) {
 	JCommander.newBuilder()
@@ -28,11 +30,18 @@ public class Arguments {
     }
 
     public String getDataPath() {
-	return dataPath;
+        return dataPath;
     }
 
     public String getRequestPath() {
-	return requestPath;
+        return requestPath;
+    }
+
+    public String getOutputPath() {
+        return outputPath;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
     }
 }
-

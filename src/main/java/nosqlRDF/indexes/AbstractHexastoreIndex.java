@@ -94,8 +94,6 @@ public abstract class AbstractHexastoreIndex {
     private Set<RDFTriple> valuesBetween(BigInteger keyLowerBound, BigInteger keyUpperBound) {
         BigInteger lowerBound =  content.ceilingKey(keyLowerBound);
         BigInteger upperBound =  content.floorKey(keyUpperBound);
-
-
         if (lowerBound.compareTo(upperBound) > 0) {
             return new HashSet<>();
         }
@@ -139,5 +137,9 @@ public abstract class AbstractHexastoreIndex {
      */
     protected BigInteger composeKeyInternal(BigInteger x, BigInteger y, BigInteger z) {
         return x.shiftLeft(2 * entityKeySize).or(y.shiftLeft(entityKeySize).or(z));
+    }
+
+    public enum HexastoreIndexType {
+        SPO, PSO, OSP, SOP, POS, OPS
     }
 }
