@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.11" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" name="Maven: com.beust:jcommander:1.78" level="project" />
+    <orderEntry type="library" name="Maven: fr.lirmm.graphik:graal-core:1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: fr.lirmm.graphik:graal-util:1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.jgrapht:jgrapht-core:0.9.0" level="project" />
+    <orderEntry type="library" name="Maven: fr.lirmm.graphik:graal-api:1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.5" level="project" />
+    <orderEntry type="library" name="Maven: fr.lirmm.graphik:graal-io-rdf:1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: fr.lirmm.graphik:rdf4j-common:1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.rdf4j:rdf4j-rio-turtle:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.rdf4j:rdf4j-rio-api:3.4.3" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.rdf4j:rdf4j-util:3.4.3" level="project" />
+    <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.3.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.activation:javax.activation-api:1.2.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.jsonld-java:jsonld-java:0.13.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient-osgi:4.5.10" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.5.10" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:fluent-hc:4.5.10" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore-osgi:4.4.12" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore-nio:4.4.12" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.rdf4j:rdf4j-rio-rdfxml:3.4.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.eclipse.rdf4j:rdf4j-rio-datatypes:3.4.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.eclipse.rdf4j:rdf4j-rio-languages:3.4.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.rdf4j:rdf4j-model:3.4.3" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.30" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.30" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryalgebra-evaluation:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryalgebra-model:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-model:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-query:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-api:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-repository-sparql:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-repository-api:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryparser-api:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryparser-sparql:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryresultio-sparqlxml:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-http-client:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-http-protocol:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-ntriples:4.1.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.openrdf.sesame:sesame-rio-datatypes:4.1.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.openrdf.sesame:sesame-rio-languages:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryresultio-api:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-util:4.1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.mapdb:mapdb:1.0.7" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-core:3.16.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-base:3.16.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-csv:1.8" level="project" />
+    <orderEntry type="library" name="Maven: com.github.andrewoma.dexx:collection:0.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-iri:3.16.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-core:3.16.0-1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-rdfconnection:3.16.0" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-mapper-proxy:3.16.0-1" level="project" />
+    <orderEntry type="library" name="Maven: cglib:cglib-nodep:3.3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-collections:3.16.0-1" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.commons:aksw-commons-util:0.8.14" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-ext:1.7.21" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.cal10n:cal10n-api:0.8.1" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.collections:collections-generic:4.01" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.5" level="project" />
+    <orderEntry type="library" name="Maven: commons-validator:commons-validator:1.6" level="project" />
+    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-digester:commons-digester:1.8.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
+    <orderEntry type="library" name="Maven: com.thoughtworks.xstream:xstream:1.4.6" level="project" />
+    <orderEntry type="library" name="Maven: xmlpull:xmlpull:1.1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: xpp3:xpp3_min:1.1.4c" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-resources:3.16.0-1" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-mapper-annotations:3.16.0-1" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-utils:3.16.0-1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-vocabs:3.16.0-1" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-concepts:3.16.0-1" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-stmt:3.16.0-1" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-rx:3.16.0-1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-dboe-storage:3.15.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-dboe-trans-data:3.15.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-dboe-transaction:3.15.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-dboe-base:3.15.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-dboe-index:3.15.0" level="project" />
+    <orderEntry type="library" name="Maven: io.reactivex.rxjava3:rxjava:3.0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.commons:aksw-commons-collections:0.8.14" level="project" />
+    <orderEntry type="library" name="Maven: com.codepoetics:protonpack:1.11" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-compress:1.20" level="project" />
+    <orderEntry type="library" name="Maven: com.nurkiewicz.asyncretry:asyncretry-jdk7:0.0.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-arq:3.16.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-shaded-guava:3.16.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.10" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.12" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.10.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.10.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient-cache:4.5.10" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.thrift:libthrift:0.13.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.annotation:javax.annotation-api:1.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.30" level="project" />
+  </component>
+</module>
