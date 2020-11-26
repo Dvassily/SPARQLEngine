@@ -3,7 +3,17 @@ package nosqlRDF.requests;
 import java.util.List;
 
 public class Request {
-    public String getProjection() {
+    private List<Condition> conditions;
+    private List<String> projection;
+    private String text;
+
+    public Request(List<String> projection, List<Condition> conditions, String text) {
+        this.projection = projection;
+        this.conditions = conditions;
+        this.text = text;
+    }
+
+    public List<String> getProjection() {
         return projection;
     }
 
@@ -11,25 +21,26 @@ public class Request {
         return conditions;
     }
 
-    @Override
-    public String toString() {
-	String result =  "SELECT ?" + projection + " WHERE {\n";
-
-	for (Condition condition : conditions) {
-	    result += ((condition.isIssubject())? "?" : "") + condition.getSubject() + " ";
-	    result += ((condition.isIspredicate())? "?" : "") + condition.getPredicate() + " ";
-	    result += ((condition.isIsobject())? "?" : "") + condition.getObject();
-	    result += " . \n";
-	}
-	
-	return result + "}\n";
+    public String getText() {
+        return text;
     }
 
-    String projection;
-    List<Condition> conditions;
+    @Override
+    public String toString() {
+        String projectionStr = "";
+        for (String variable : projection) {
+            projectionStr += variable + " ";
+        }
 
-    public Request(String projection, List<Condition> conditions) {
-        this.projection = projection;
-        this.conditions = conditions;
+        String result =  "SELECT ?" + projectionStr + "WHERE {\n";
+
+        for (Condition condition : conditions) {
+            result += ((condition.subjectIsVariable())? "?" : "") + condition.getSubject() + " ";
+            result += ((condition.predicateIsVariable())? "?" : "") + condition.getPredicate() + " ";
+            result += ((condition.objectIsVariable())? "?" : "") + condition.getObject();
+            result += " . \n";
+        }
+	
+        return result + "}\n";
     }
 }

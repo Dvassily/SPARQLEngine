@@ -4,6 +4,9 @@ public class Condition {
     private String subject;
     private String predicate;
     private String object;
+    private boolean subjectIsVariable;
+    private boolean predicateIsVariable;
+    private boolean objectIsVariable;
 
     public String getSubject() {
         return subject;
@@ -17,25 +20,30 @@ public class Condition {
         return object;
     }
 
-    public boolean isIssubject() {
-        return Issubject;
+    public boolean subjectIsVariable() {
+        return subjectIsVariable;
     }
 
-    public boolean isIspredicate() {
-        return Ispredicate;
+    public boolean predicateIsVariable() {
+        return predicateIsVariable;
     }
 
-    public boolean isIsobject() {
-        return Isobject;
+    public boolean objectIsVariable() {
+        return objectIsVariable;
     }
 
-    private boolean Issubject;
-    private boolean Ispredicate;
-    private boolean Isobject;
+    public void setSubject(String value, boolean variable) {
+        subject = value;
+        subjectIsVariable = variable;
+    }
 
-    public Condition(String subjet, String predicate, String object) {
-        this.subject = subjet;
-        this.predicate = predicate;
-        this.object = object;
+    public void setPredicate(String value, boolean variable) {
+        predicate = value;
+        predicateIsVariable = variable;
+    }
+
+    public void setObject(String value, boolean variable) {
+        object = value;
+        objectIsVariable = variable;
     }
 }

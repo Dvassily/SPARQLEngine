@@ -3,10 +3,13 @@ package nosqlRDF;
 import nosqlRDF.datas.RDFTriple;
 import nosqlRDF.requests.SPARQLRequestParser;
 import nosqlRDF.requests.Request;
+import nosqlRDF.requests.Result;
 import nosqlRDF.utils.BenchmarkEngine;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.logging.FileHandler;
@@ -18,6 +21,12 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.apache.jena.rdfconnection.RDFConnection;
+import org.apache.jena.rdfconnection.RDFConnectionLocal;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.core.DatasetOne;
 
 public class Runner
 {
@@ -33,13 +42,23 @@ public class Runner
     private String resultsOutputFile;
     // private WorkloadOutputWriter workloadOutputWriter;
     private boolean verbose;
+    private boolean check;
+    private RDFConnection connection;
 
-    public Runner(String dataPath, String queryFile, String outputPath, boolean verbose) throws IOException {
+    public Runner(String dataPath, String queryFile, String outputPath, boolean verbose, boolean check) throws IOException {
         this.dataPath = dataPath;
         this.queryFile = queryFile;
         this.queries = new SPARQLRequestParser(queryFile).loadQueries();
         this.outputPath = outputPath;
         this.verbose = verbose;
+        this.check = check;
+
+        if (check) {
+            Model model = ModelFactory.createDefaultModel();
+            model.read(dataPath, "RDF/XML");
+            DatasetOne ds = new DatasetOne(model);
+            connection = new RDFConnectionLocal(ds);
+        }
     }
 
     public void run() throws IOException {
@@ -60,13 +79,17 @@ public class Runner
 
     private long executeQuery(Request query) {
         writeTrace("Execution of request : ");
-        writeTrace(query.toString());
+        writeTrace(query.getText());
         BenchmarkEngine requestBenchmarkEngine = new BenchmarkEngine("Request benchmark");
         requestBenchmarkEngine.begin();
-        Set<RDFTriple> triples = engine.query(query);
+        Set<Result> triples = engine.query(query);
         requestBenchmarkEngine.end();
         writeTrace("Number of results : " + triples.size());
         writeTrace("Execution duration : " + requestBenchmarkEngine.getDuration() + "ms");
+
+        if (check) {
+            validateResult(query.getText(), triples);
+        }
 
         return requestBenchmarkEngine.getDuration();
     }
@@ -98,6 +121,29 @@ public class Runner
     public void writeTrace(String message) {
         if (verbose) {
             logger.info(message);
+        }
+    }
+
+    public void validateResult(String query, Set<Result> results) {
+        System.out.println(query);
+        boolean ok = true;
+        Set<Result> expectedResults = new HashSet<>();
+
+        connection.querySelect(query, (qs)-> {
+                Result result = new Result();
+                Iterator<String> iterator = qs.varNames();
+
+                while (iterator.hasNext()) {
+                    String variable = iterator.next();
+
+                    result.addColumn(variable, qs.getResource(variable).toString());
+                }
+
+                expectedResults.add(result);
+        });
+
+        if (! expectedResults.equals(results)) {
+            throw new CheckAgainstOracleFailureException(query, expectedResults, results);
         }
     }
 }

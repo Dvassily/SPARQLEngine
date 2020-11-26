@@ -4,6 +4,7 @@ import nosqlRDF.datas.RDFTriple;
 import nosqlRDF.datas.Dictionary;
 import nosqlRDF.indexes.*;
 import nosqlRDF.indexes.AbstractHexastoreIndex.HexastoreIndexType;
+import nosqlRDF.requests.Result;
 import static nosqlRDF.indexes.AbstractHexastoreIndex.HexastoreIndexType.*;
 
 import java.util.*;
@@ -144,14 +145,14 @@ public class SPARQLEngine {
         return ((PSOIndex) indexes.get(PSO)).findSubjectObject(predicate);
     }
 
-    public Set<RDFTriple> query(Request request) {
-        Set<RDFTriple> resultSet = new HashSet<>();
+    public Set<Result> query(Request request) {
+        Set<RDFTriple> tripleSet = new HashSet<>();
         Map<Condition, Set<RDFTriple>> intermediaryResults = new HashMap<>();
 
         for (Condition condition : request.getConditions()) {
             try {
                 Set<RDFTriple> intermediaryResult = findSubject(condition.getPredicate(), condition.getObject());
-                resultSet.addAll(intermediaryResult);
+                tripleSet.addAll(intermediaryResult);
                 intermediaryResults.put(condition, intermediaryResult);
             // TODO : Rename ParameterNotFoundException
             } catch(InvalidQueryArgument e) {
@@ -171,7 +172,19 @@ public class SPARQLEngine {
             subjects.retainAll(intermediaryResultSubjects);
         }
 
-        return resultSet.stream().filter(t -> subjects.contains(t.getSubject())).collect(Collectors.toSet());
+        tripleSet = tripleSet.stream().filter(t -> subjects.contains(t.getSubject())).collect(Collectors.toSet());
+
+        Set<Result> results = new HashSet<>();
+
+        for (RDFTriple triple : tripleSet) {
+            Result result = new Result();
+
+            result.addColumn(request.getProjection().get(0), triple.getSubject());
+
+            results.add(result);
+        }
+
+        return results;
     }
 
 

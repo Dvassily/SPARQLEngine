@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -13,6 +14,8 @@ import org.openrdf.query.algebra.Projection;
 import org.openrdf.query.algebra.QueryModelNode;
 import org.openrdf.query.algebra.QueryRoot;
 import org.openrdf.query.algebra.StatementPattern;
+import org.openrdf.query.algebra.Var;
+import org.openrdf.query.algebra.ProjectionElem;
 import org.openrdf.query.algebra.helpers.QueryModelVisitorBase;
 import org.openrdf.query.algebra.helpers.StatementPatternCollector;
 import org.openrdf.query.parser.ParsedQuery;
@@ -38,10 +41,7 @@ public class SPARQLRequestParser {
         fis.close();
 
         String rawRequests = new String(data, "UTF-8").replace("\n", "").replace("\r", "");
-        // Create a Pattern object
         Pattern r = Pattern.compile("[^\\{]+\\{[^\\}]+\\}");
-
-        // Now create matcher object.
         Matcher queries = r.matcher(rawRequests);
 
         boolean foo = false;
@@ -56,28 +56,40 @@ public class SPARQLRequestParser {
     public Request parseQuery(String query) {
         ParsedQuery pq = sparqlParser.parseQuery(query, null);
 
-        final String[] projection = {null};
+        List<String> projection = new ArrayList<>();
 
         pq.getTupleExpr().visit(new QueryModelVisitorBase<RuntimeException>() {
                 public void meet(Projection proj) {
-                    projection[0] = proj.getProjectionElemList().getElements().get(0).getSourceName();
+                    for (ProjectionElem elem : proj.getProjectionElemList().getElements()) {
+                        projection.add(elem.getSourceName());
+                    }
                 }
             });
 
 
         List<StatementPattern> patterns = StatementPatternCollector.process(pq.getTupleExpr());
         List<Condition> conditions = new LinkedList<>();
-	
-        for (StatementPattern pattern: patterns) {
-            String subject = pattern.getSubjectVar().getName();
-            String predicat = pattern.getPredicateVar().getValue().stringValue();
-            String object = pattern.getObjectVar().getValue().stringValue();
-            Condition cond = new Condition(subject, predicat, object);
 
-            conditions.add(cond);
+        for (StatementPattern pattern: patterns) {
+            Condition condition = new Condition();
+            Var var = pattern.getSubjectVar();
+            boolean isVariable = ! var.hasValue();
+            String value = isVariable? var.getName() : var.getValue().stringValue();
+            condition.setSubject(var.getName(), isVariable);
+
+            var = pattern.getPredicateVar();
+            isVariable = ! var.hasValue();
+            value = isVariable? var.getName() : var.getValue().stringValue();
+            condition.setPredicate(var.getName(), isVariable);
+
+            var = pattern.getObjectVar();
+            isVariable = ! var.hasValue();
+            value = isVariable? var.getName() : var.getValue().stringValue();
+            condition.setObject(var.getName(), isVariable);
+
+            conditions.add(condition);
         }
 
-
-        return new Request(projection[0], conditions);
+        return new Request(projection, conditions, query);
 	}
 }

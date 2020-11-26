@@ -70,6 +70,21 @@
       <artifactId>sesame-queryalgebra-evaluation</artifactId>
       <version>4.1.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-core</artifactId>
+      <version>3.16.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.aksw.jena-sparql-api</groupId>
+      <artifactId>jena-sparql-api-core</artifactId>
+      <version>3.16.0-1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-arq</artifactId>
+      <version>3.16.0</version>
+    </dependency>
   </dependencies>
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->

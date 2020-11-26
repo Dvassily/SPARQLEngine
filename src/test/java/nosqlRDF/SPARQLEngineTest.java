@@ -138,6 +138,16 @@ public class SPARQLEngineTest
     assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY,res.getObject());
     }
 
+    // @Test
+    // public void testWithRealData() {
+    //     engine = new SPARQLEngine();
+
+    //     engine.insertTriple(, , );
+    //     engine.insertTriple(ALICE_ENTITY, WORKS_FOR_PREDICATE, EDF_ENTITY);
+
+    //     engine.initDictionaryAndIndexes();
+
+    // }
 
 
 //    @Test

@@ -22,6 +22,7 @@ public class App {
             arguments.parse(args);
         } catch (ParameterException exception) {
             System.err.println(exception.getMessage());
+            System.exit(1);
         }
 
         if (arguments.getDataPath() == null) {
@@ -35,7 +36,7 @@ public class App {
 
         for (String queryFile : queryFiles) {
             try {
-                Runner runner = new Runner(arguments.getDataPath(), queryFile, arguments.getOutputPath(), arguments.isVerbose());
+                Runner runner = new Runner(arguments.getDataPath(), queryFile, arguments.getOutputPath(), arguments.isVerbose(), true);
 
                 try {
                     runner.run();
@@ -61,4 +62,6 @@ public class App {
 
         return filesPath;
     }
+
+
 }

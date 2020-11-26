@@ -11,7 +11,8 @@ public class Arguments {
 
     @Parameter(names = {"-queries" , "-q"},
                description = "Provides path towards the folder containing queries",
-               required = true)
+               required = true,
+               validateWith = ArgumentValidator.class)
                private String requestPath = null;
 
     @Parameter(names = {"-output" , "-o"},
