@@ -187,8 +187,6 @@ public class SPARQLEngine {
         return results;
     }
 
-
-
     /**
      * Find the number of entities loaded in the engine
      */

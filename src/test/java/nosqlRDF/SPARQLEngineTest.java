@@ -138,16 +138,25 @@ public class SPARQLEngineTest
     assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY,res.getObject());
     }
 
-    // @Test
-    // public void testWithRealData() {
-    //     engine = new SPARQLEngine();
+    @Test
+    public void testWithRealData() {
+        engine = new SPARQLEngine();
 
-    //     engine.insertTriple(, , );
-    //     engine.insertTriple(ALICE_ENTITY, WORKS_FOR_PREDICATE, EDF_ENTITY);
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer528", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer1604", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer879", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer3615", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer480", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer2294", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer4423", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer235", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer3771", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer4149", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
+        engine.insertTriple("http://db.uwaterloo.ca/~galuc/wsdbm/Offer138", "http://schema.org/eligibleRegion", "http://db.uwaterloo.ca/~galuc/wsdbm/Country137");
 
-    //     engine.initDictionaryAndIndexes();
+        engine.initDictionaryAndIndexes();
 
-    // }
+    }
 
 
 //    @Test

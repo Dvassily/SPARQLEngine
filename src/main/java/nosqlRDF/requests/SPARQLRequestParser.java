@@ -75,17 +75,17 @@ public class SPARQLRequestParser {
             Var var = pattern.getSubjectVar();
             boolean isVariable = ! var.hasValue();
             String value = isVariable? var.getName() : var.getValue().stringValue();
-            condition.setSubject(var.getName(), isVariable);
+            condition.setSubject(value, isVariable);
 
             var = pattern.getPredicateVar();
             isVariable = ! var.hasValue();
             value = isVariable? var.getName() : var.getValue().stringValue();
-            condition.setPredicate(var.getName(), isVariable);
+            condition.setPredicate(value, isVariable);
 
             var = pattern.getObjectVar();
             isVariable = ! var.hasValue();
             value = isVariable? var.getName() : var.getValue().stringValue();
-            condition.setObject(var.getName(), isVariable);
+            condition.setObject(value, isVariable);
 
             conditions.add(condition);
         }
