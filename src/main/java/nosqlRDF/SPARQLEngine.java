@@ -151,7 +151,7 @@ public class SPARQLEngine {
 
         for (Condition condition : request.getConditions()) {
             try {
-                Set<RDFTriple> intermediaryResult = findSubject(condition.getPredicate(), condition.getObject());
+                Set<RDFTriple> intermediaryResult =  getResultFromCondition(condition);
                 tripleSet.addAll(intermediaryResult);
                 intermediaryResults.put(condition, intermediaryResult);
             // TODO : Rename ParameterNotFoundException
@@ -188,6 +188,25 @@ public class SPARQLEngine {
     }
 
 
+
+    private Set<RDFTriple> getResultFromCondition(Condition condition) throws InvalidQueryArgument {
+
+        if(condition.objectIsVariable() && condition.predicateIsVariable()) {
+            return findPredicateObject(condition.getSubject());
+        } else if(condition.objectIsVariable() && condition.subjectIsVariable()) {
+            return findSubjectObject(condition.getPredicate());
+        } else if(condition.subjectIsVariable() && condition.predicateIsVariable()) {
+            return findSubjectPredicate(condition.getObject());
+        } else if(condition.objectIsVariable()) {
+            return findObject(condition.getSubject(), condition.getPredicate());
+        } else if(condition.predicateIsVariable()) {
+            return findSubjectObject(condition.getPredicate());
+        } else if(condition.subjectIsVariable()) {
+            return findSubject(condition.getPredicate(), condition.getObject());
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Find the number of entities loaded in the engine
