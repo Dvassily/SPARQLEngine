@@ -17,6 +17,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.stream.Collectors;
 import nosqlRDF.requests.Condition;
+import nosqlRDF.requests.JoinOperation;
+import nosqlRDF.requests.JoinableSet;
+import nosqlRDF.requests.JoinableTriple;
 import nosqlRDF.requests.Request;
 import org.eclipse.rdf4j.rio.RDFFormat;
 
@@ -86,7 +89,7 @@ public class SPARQLEngine {
      * @param predicate The input subject
      * @param object    The input predicate
      */
-    public Set<RDFTriple> findSubject(String predicate, String object) throws InvalidQueryArgument {
+    public Set<RDFTriple> findSubject(String predicate, String object) throws InvalidQueryArgumentException {
         return ((POSIndex) indexes.get(POS)).findSubject(predicate, object);
     }
 
@@ -97,7 +100,7 @@ public class SPARQLEngine {
      * @param subject   The input subject
      * @param predicate The input predicate
      */
-    public Set<RDFTriple> findObject(String subject, String predicate) throws InvalidQueryArgument {
+    public Set<RDFTriple> findObject(String subject, String predicate) throws InvalidQueryArgumentException {
         return ((SPOIndex) indexes.get(SPO)).findObject(subject, predicate);
     }
 
@@ -108,7 +111,7 @@ public class SPARQLEngine {
      * @param subject The input subject
      * @param object  The input predicate
      */
-    public Set<RDFTriple> findPredicate(String subject, String object) throws InvalidQueryArgument {
+    public Set<RDFTriple> findPredicate(String subject, String object) throws InvalidQueryArgumentException {
         return ((OSPIndex) indexes.get(OSP)).findPredicate(subject, object);
     }
 
@@ -119,7 +122,7 @@ public class SPARQLEngine {
      *
      * @param subject The input subject
      */
-    public Set<RDFTriple> findPredicateObject(String subject) throws InvalidQueryArgument {
+    public Set<RDFTriple> findPredicateObject(String subject) throws InvalidQueryArgumentException {
         return ((SPOIndex) indexes.get(SPO)).findPredicateObject(subject);
     }
 
@@ -130,7 +133,7 @@ public class SPARQLEngine {
      *
      * @param object The input subject
      */
-    public Set<RDFTriple> findSubjectPredicate(String object) throws InvalidQueryArgument {
+    public Set<RDFTriple> findSubjectPredicate(String object) throws InvalidQueryArgumentException {
         return ((OSPIndex) indexes.get(OSP)).findSubjectPredicate(object);
     }
 
@@ -141,70 +144,71 @@ public class SPARQLEngine {
      *
      * @param predicate The input predicate
      */
-    public Set<RDFTriple> findSubjectObject(String predicate) throws InvalidQueryArgument {
+    public Set<RDFTriple> findSubjectObject(String predicate) throws InvalidQueryArgumentException {
         return ((PSOIndex) indexes.get(PSO)).findSubjectObject(predicate);
     }
 
-    public Set<Result> query(Request request) {
-        Set<RDFTriple> tripleSet = new HashSet<>();
-        Map<Condition, Set<RDFTriple>> intermediaryResults = new HashMap<>();
+    public Result query(Request request) {
+        Set<JoinableTriple> tripleSet = new HashSet<>();
 
-        for (Condition condition : request.getConditions()) {
-            try {
-                Set<RDFTriple> intermediaryResult =  getResultFromCondition(condition);
-                tripleSet.addAll(intermediaryResult);
-                intermediaryResults.put(condition, intermediaryResult);
-            // TODO : Rename ParameterNotFoundException
-            } catch(InvalidQueryArgument e) {
-                intermediaryResults.put(condition, new HashSet<>());
+        try {
+            if (request.getConditions().size() == 1) {
+                tripleSet.addAll(request.getConditions().get(0).elements(this));
+            } else if (request.getConditions().size() > 1) {
+                JoinOperation join = buildJoinNode(request.getConditions().iterator(), null);
+                tripleSet = join.perform(this);
+            }
+        } catch (InvalidQueryArgumentException e) {
+            // Do nothing
+            System.out.println("Argument ''" + e.getArgument() + "' wasn't found");
+        }
+
+        Result result = new Result();
+
+        // Projection
+        for (JoinableTriple triple : tripleSet) {
+            for (String projection : request.getProjection()) {
+                Map<String, String> variables = triple.variables();
+
+                if (variables.containsKey(projection)) {
+                    result.add(projection, variables.get(projection));
+                }
             }
         }
 
-        Set<String> subjects = new HashSet<>(dictionary.getResources());
-        for (Map.Entry<Condition, Set<RDFTriple>> entry : intermediaryResults.entrySet()) {
-            Set<RDFTriple> intermediaryResult = entry.getValue();
-
-            Set<String> intermediaryResultSubjects = intermediaryResult
-                .stream()
-                .map(t -> t.getSubject())
-                .collect(Collectors.toSet());
-
-            subjects.retainAll(intermediaryResultSubjects);
-        }
-
-        tripleSet = tripleSet.stream().filter(t -> subjects.contains(t.getSubject())).collect(Collectors.toSet());
-
-        Set<Result> results = new HashSet<>();
-
-        for (RDFTriple triple : tripleSet) {
-            Result result = new Result();
-
-            result.addColumn(request.getProjection().get(0), triple.getSubject());
-
-            results.add(result);
-        }
-
-        return results;
+        return result;
     }
 
-    private Set<RDFTriple> getResultFromCondition(Condition condition) throws InvalidQueryArgument {
+    private JoinOperation buildJoinNode(Iterator<Condition> iterator, JoinOperation previousJoin) {
+        JoinableSet set1 = null;
+        JoinableSet set2 = null;
 
-        if(condition.objectIsVariable() && condition.predicateIsVariable()) {
-            return findPredicateObject(condition.getSubject());
-        } else if(condition.objectIsVariable() && condition.subjectIsVariable()) {
-            return findSubjectObject(condition.getPredicate());
-        } else if(condition.subjectIsVariable() && condition.predicateIsVariable()) {
-            return findSubjectPredicate(condition.getObject());
-        } else if(condition.objectIsVariable()) {
-            return findObject(condition.getSubject(), condition.getPredicate());
-        } else if(condition.predicateIsVariable()) {
-            return findSubjectObject(condition.getPredicate());
-        } else if(condition.subjectIsVariable()) {
-            return findSubject(condition.getPredicate(), condition.getObject());
+        if (previousJoin == null) {
+            set1 = iterator.next();
+            set2 = iterator.next();
         } else {
-            return null;
+            if (! iterator.hasNext()) {
+                return null;
+            }
+
+            set1 = previousJoin;
+            set2 = iterator.next();
         }
+
+        JoinOperation joinOperation = new JoinOperation(set1, set2);
+        JoinOperation parentJoinOperation = buildJoinNode(iterator, joinOperation);
+
+        if (parentJoinOperation == null) {
+            return joinOperation;
+        }
+
+		return parentJoinOperation;
     }
+
+    // private Set<RDFTriple> getResultFromCondition(Condition condition) throws InvalidQueryArgumentException {
+
+
+    // }
 
     /**
      * Find the number of entities loaded in the engine

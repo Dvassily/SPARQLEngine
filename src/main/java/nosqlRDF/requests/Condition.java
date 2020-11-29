@@ -1,6 +1,16 @@
 package nosqlRDF.requests;
 
-public class Condition {
+import nosqlRDF.datas.RDFTriple;
+import nosqlRDF.SPARQLEngine;
+import nosqlRDF.InvalidQueryArgumentException;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+public class Condition implements JoinableSet {
     private String subject;
     private String predicate;
     private String object;
@@ -47,4 +57,70 @@ public class Condition {
         objectIsVariable = variable;
     }
 
+    public Set<JoinableTriple> elements(SPARQLEngine engine) throws InvalidQueryArgumentException {
+        Set<JoinableTriple> result = new HashSet<>();
+
+        for (RDFTriple triple : findMatchingTriple(engine)) {
+            result.add(makeJoinableTriple(triple));
+        }
+
+        return result;
+    }
+
+    public Set<RDFTriple> findMatchingTriple(SPARQLEngine engine) throws InvalidQueryArgumentException {
+       if (! subjectIsVariable() && ! predicateIsVariable() && ! objectIsVariable()) {
+            return new HashSet<>(Arrays.asList(new RDFTriple(subject, predicate, object)));
+        } else if (! subjectIsVariable() && ! predicateIsVariable() && objectIsVariable()) {
+            return engine.findSubjectPredicate(object);
+        } else if (! subjectIsVariable() && predicateIsVariable() && ! objectIsVariable()) {
+            return engine.findSubjectObject(predicate);
+        } else if (! subjectIsVariable() && predicateIsVariable() && objectIsVariable() ) {
+            return engine.findPredicateObject(subject);
+        } else if (subjectIsVariable() && ! predicateIsVariable() && ! objectIsVariable()) {
+            return engine.findSubject(predicate, object);
+        } else if (subjectIsVariable() && ! predicateIsVariable() && objectIsVariable()) {
+            return engine.findSubjectPredicate(object);
+        } else if (subjectIsVariable() && predicateIsVariable() && ! objectIsVariable()) {
+            return engine.findSubjectObject(predicate);
+        } else if (subjectIsVariable() && predicateIsVariable() && objectIsVariable() ) {
+            return engine.findPredicateObject(subject);
+        } else {
+           return null;
+       }
+    }
+
+    public JoinableTriple makeJoinableTriple(RDFTriple triple) {
+        JoinableTriple joinableTriple = new JoinableTriple(triple);
+
+        if (!subjectIsVariable() && !predicateIsVariable() && !objectIsVariable()) {
+            // Does nothing
+        } else if (!subjectIsVariable() && !predicateIsVariable() && objectIsVariable()) {
+            joinableTriple.setObjectVariable(object);
+        } else if (!subjectIsVariable() && predicateIsVariable() && !objectIsVariable()) {
+            joinableTriple.setPredicateVariable(predicate);
+        } else if (!subjectIsVariable() && predicateIsVariable() && objectIsVariable()) {
+            joinableTriple.setPredicateVariable(predicate);
+            joinableTriple.setObjectVariable(object);
+        } else if (subjectIsVariable() && !predicateIsVariable() && !objectIsVariable()) {
+            joinableTriple.setSubjectVariable(subject);
+        } else if (subjectIsVariable() && !predicateIsVariable() && objectIsVariable()) {
+            joinableTriple.setSubjectVariable(subject);
+            joinableTriple.setObjectVariable(object);
+        } else if (subjectIsVariable() && predicateIsVariable() && !objectIsVariable()) {
+            joinableTriple.setSubjectVariable(subject);
+            joinableTriple.setPredicateVariable(predicate);
+        } else if (subjectIsVariable() && predicateIsVariable() && objectIsVariable()) {
+            joinableTriple.setSubjectVariable(subject);
+            joinableTriple.setPredicateVariable(predicate);
+            joinableTriple.setObjectVariable(object);
+        } else {
+            return null;
+        }
+
+        return joinableTriple;
+    }
+
+    public Set<String> variables() {
+        return new HashSet<>();
+    }
 }

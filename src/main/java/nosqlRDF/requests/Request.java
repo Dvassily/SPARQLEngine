@@ -28,8 +28,9 @@ public class Request {
     @Override
     public String toString() {
         String projectionStr = "";
-        for (String variable : projection) {
-            projectionStr += variable + " ";
+
+        for (String p : projection) {
+            projectionStr += p + " ";
         }
 
         String result =  "SELECT ?" + projectionStr + "WHERE {\n";

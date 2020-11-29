@@ -32,14 +32,10 @@ public class Runner
 {
     private String dataPath;
     private String queryFile;
-    private String outputPath;
     private List<Request> queries = new ArrayList<>();
     private SPARQLEngine engine;
     private Logger logger = Logger.getLogger(Runner.class.getName());
     private ArrayList<Long> executionDurations = new ArrayList<>();
-    private String workloadOutputFile;
-    private String statsOutputFile;
-    private String resultsOutputFile;
     // private WorkloadOutputWriter workloadOutputWriter;
     private boolean verbose;
     private boolean check;
@@ -49,7 +45,7 @@ public class Runner
         this.dataPath = dataPath;
         this.queryFile = queryFile;
         this.queries = new SPARQLRequestParser(queryFile).loadQueries();
-        this.outputPath = outputPath;
+        // this.outputPath = outputPath;
         this.verbose = verbose;
         this.check = check;
 
@@ -82,13 +78,13 @@ public class Runner
         writeTrace(query.getText());
         BenchmarkEngine requestBenchmarkEngine = new BenchmarkEngine("Request benchmark");
         requestBenchmarkEngine.begin();
-        Set<Result> triples = engine.query(query);
+        Result result = engine.query(query);
         requestBenchmarkEngine.end();
-        writeTrace("Number of results : " + triples.size());
+        // writeTrace("Number of results : " + triples.size());
         writeTrace("Execution duration : " + requestBenchmarkEngine.getDuration() + "ms");
 
         if (check) {
-            validateResult(query.getText(), triples);
+            validateResult(query.getText(), result);
         }
 
         return requestBenchmarkEngine.getDuration();
@@ -124,22 +120,17 @@ public class Runner
         }
     }
 
-    public void validateResult(String query, Set<Result> results) {
-        System.out.println(query);
-        boolean ok = true;
-        Set<Result> expectedResults = new HashSet<>();
+    public void validateResult(String query, Result results) {
+        Result expectedResults = new Result();
 
         connection.querySelect(query, (qs)-> {
-                Result result = new Result();
                 Iterator<String> iterator = qs.varNames();
 
                 while (iterator.hasNext()) {
                     String variable = iterator.next();
 
-                    result.addColumn(variable, qs.getResource(variable).toString());
+                    expectedResults.add(variable, qs.get(variable).toString());
                 }
-
-                expectedResults.add(result);
         });
 
         if (! expectedResults.equals(results)) {

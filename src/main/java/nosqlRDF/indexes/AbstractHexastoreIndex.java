@@ -1,10 +1,10 @@
 package nosqlRDF.indexes;
 
-import nosqlRDF.InvalidQueryArgument;
+import nosqlRDF.InvalidQueryArgumentException;
 
 import nosqlRDF.datas.Dictionary;
 import nosqlRDF.datas.RDFTriple;
-import nosqlRDF.InvalidQueryArgument;
+import nosqlRDF.InvalidQueryArgumentException;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.File;
@@ -49,9 +49,9 @@ public abstract class AbstractHexastoreIndex {
      *
      * @param x the identifier of the entity whose value from dictionary correponds to the {entityKeySize} most significant bits
      */
-    protected Set<RDFTriple> findYZ(String x) throws InvalidQueryArgument {
+    protected Set<RDFTriple> findYZ(String x) throws InvalidQueryArgumentException {
         if (! dictionary.contains(x)) {
-            throw new InvalidQueryArgument(x);
+            throw new InvalidQueryArgumentException(x);
         }
 	
         BigInteger xKey = dictionary.getKey(x);
@@ -67,13 +67,13 @@ public abstract class AbstractHexastoreIndex {
      * @param x the identifier of the entity whose value from dictionary correponds to the {entityKeySize} most significant bits of the resultings triple
      * @param y the identifier of the entity whose value from dictionary correponds to the {entityKeySize} bits situated just after the {entityKeySize} most significant bits of the resulting triple
      */
-    protected Set<RDFTriple> findZ(String x, String y) throws InvalidQueryArgument {
+    protected Set<RDFTriple> findZ(String x, String y) throws InvalidQueryArgumentException {
         if (! dictionary.contains(x)) {
-            throw new InvalidQueryArgument(x);
+            throw new InvalidQueryArgumentException(x);
         }
 
         if (! dictionary.contains(y)) {
-            throw new InvalidQueryArgument(y);
+            throw new InvalidQueryArgumentException(y);
         }
 
         BigInteger xKey = dictionary.getKey(x);

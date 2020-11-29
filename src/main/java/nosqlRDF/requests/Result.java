@@ -1,41 +1,77 @@
 package nosqlRDF.requests;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.HashMap;
 
 public class Result {
-    private Map<String, String> columns = new HashMap<>();
+    private Map<String, Set<String>> content = new HashMap<>();
 
-    public void addColumn(String identifier, String value) {
-        columns.put(identifier, value);
-    }
+    public void add(String variable, String value) {
+        if (! content.containsKey(variable)) {
+            content.put(variable, new HashSet<>());
+        }
 
-    public String getValue(String identifier) {
-        return columns.get(identifier);
+        content.get(variable).add(value);
     }
 
     @Override
     public int hashCode() {
-        return columns.hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((content == null) ? 0 : content.hashCode());
+        return result;
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
-
         if (obj == null)
             return false;
-
         if (getClass() != obj.getClass())
             return false;
-
-        final Result other = (Result) obj;
-        return columns.equals(other.columns);
+        Result other = (Result) obj;
+        if (content == null) {
+            if (other.content != null)
+                return false;
+        } else if (! content.equals(other.content))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-        return columns.toString();
+        String result = "{";
+
+        int i = 0;
+        for (Map.Entry<String, Set<String>> entry : content.entrySet()) {
+            result += entry.getKey() + " : [ ";
+
+            int j = 0;
+            for (String value : entry.getValue()) {
+                result += value;
+
+                if (j < entry.getValue().size() - 1) {
+                    result += ", ";
+                }
+
+                ++j;
+            }
+
+            result += "]";
+
+            if (i < content.keySet().size() - 1) {
+                result += "; ";
+            }
+
+            ++i;
+        }
+
+        result += "}";
+
+        return result;
     }
+
 }

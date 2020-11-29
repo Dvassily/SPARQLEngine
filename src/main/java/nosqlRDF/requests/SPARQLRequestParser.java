@@ -9,10 +9,7 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.algebra.Projection;
-import org.openrdf.query.algebra.QueryModelNode;
-import org.openrdf.query.algebra.QueryRoot;
 import org.openrdf.query.algebra.StatementPattern;
 import org.openrdf.query.algebra.Var;
 import org.openrdf.query.algebra.ProjectionElem;
