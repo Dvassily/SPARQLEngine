@@ -87,6 +87,8 @@ public class Runner
             validateResult(query.getText(), result);
         }
 
+        System.out.println(result.toString());
+
         return requestBenchmarkEngine.getDuration();
     }
 
@@ -134,7 +136,7 @@ public class Runner
         });
 
         if (! expectedResults.equals(results)) {
-            throw new CheckAgainstOracleFailureException(query, expectedResults, results);
+            throw new CheckAgainstOracleFailureException(query, expectedResults, results, engine);
         }
     }
 }

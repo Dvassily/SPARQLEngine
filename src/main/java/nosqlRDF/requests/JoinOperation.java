@@ -46,6 +46,7 @@ public class JoinOperation implements JoinableSet {
                 }
             }
         }
+        System.out.println("join " + setFrom + " with " + setTo + " : Done !");
 
         return result;
     }

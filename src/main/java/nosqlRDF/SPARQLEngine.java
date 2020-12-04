@@ -10,6 +10,8 @@ import static nosqlRDF.indexes.AbstractHexastoreIndex.HexastoreIndexType.*;
 import java.util.*;
 import java.io.File;
 import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
@@ -52,9 +54,9 @@ public class SPARQLEngine {
             if (element instanceof Atom) {
                 Atom dataTriple = (Atom) element;
 
-                String subject = dataTriple.getTerm(0).toString();
+                String subject = dataTriple.getTerm(0).getLabel();
                 String predicate = dataTriple.getPredicate().getIdentifier().toString();
-                String object = dataTriple.getTerm(1).toString();
+                String object = dataTriple.getTerm(1).getLabel();
 
                 insertTriple(subject, predicate, object);
             }
@@ -257,6 +259,13 @@ public class SPARQLEngine {
                 dictionary.insert(object, true);
             }
         }
+
+        try {
+			Files.write(Paths.get("dico.txt"), dictionary.toString().getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     private void initIndexes() {

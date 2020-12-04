@@ -24,7 +24,7 @@ import java.math.BigInteger;
  * The order of the concatenation depends of the implementation
  */
 public abstract class AbstractHexastoreIndex {
-    public static final int entityKeySize = 64;
+    public static final int entityKeySize = 32;
 
     private Dictionary dictionary;
     private TreeMap<BigInteger, RDFTriple> content = new TreeMap<>();
@@ -55,9 +55,13 @@ public abstract class AbstractHexastoreIndex {
         }
 	
         BigInteger xKey = dictionary.getKey(x);
+
         BigInteger keyLowerBound = composeKeyInternal(xKey, BigInteger.valueOf(0), BigInteger.valueOf(0));
         BigInteger keyUpperBound = composeKeyInternal(xKey.add(BigInteger.valueOf(1)), BigInteger.valueOf(0), BigInteger.valueOf(0)).subtract(BigInteger.valueOf(1));
-	
+
+        System.out.println(keyLowerBound);
+        System.out.println(keyUpperBound);
+
         return valuesBetween(keyLowerBound, keyUpperBound);
     }
 
@@ -82,7 +86,6 @@ public abstract class AbstractHexastoreIndex {
         BigInteger keyLowerBound = composeKeyInternal(xKey, yKey, BigInteger.valueOf(0));
         BigInteger keyUpperBound = composeKeyInternal(xKey, yKey.add(BigInteger.valueOf(1)), BigInteger.valueOf(0)).subtract(BigInteger.valueOf(1));
 
-
         return valuesBetween(keyLowerBound, keyUpperBound);
     }
 
@@ -94,6 +97,7 @@ public abstract class AbstractHexastoreIndex {
     private Set<RDFTriple> valuesBetween(BigInteger keyLowerBound, BigInteger keyUpperBound) {
         BigInteger lowerBound =  content.ceilingKey(keyLowerBound);
         BigInteger upperBound =  content.floorKey(keyUpperBound);
+
         if (lowerBound.compareTo(upperBound) > 0) {
             return new HashSet<>();
         }
