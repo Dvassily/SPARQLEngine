@@ -3,7 +3,7 @@ package nosqlRDF;
 import nosqlRDF.datas.RDFTriple;
 import nosqlRDF.requests.Request;
 import nosqlRDF.requests.Condition;
-import nosqlRDF.InvalidQueryArgument;
+// import nosqlRDF.InvalidQueryArgument;
 import nosqlRDF.requests.SPARQLRequestParser;
 
 import java.util.Set;

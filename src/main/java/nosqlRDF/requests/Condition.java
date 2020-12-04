@@ -71,19 +71,17 @@ public class Condition implements JoinableSet {
        if (! subjectIsVariable() && ! predicateIsVariable() && ! objectIsVariable()) {
             return new HashSet<>(Arrays.asList(new RDFTriple(subject, predicate, object)));
         } else if (! subjectIsVariable() && ! predicateIsVariable() && objectIsVariable()) {
-            return engine.findSubjectPredicate(object);
+            return engine.findObject(subject, predicate);
         } else if (! subjectIsVariable() && predicateIsVariable() && ! objectIsVariable()) {
-            return engine.findSubjectObject(predicate);
+            return engine.findPredicate(subject, object);
         } else if (! subjectIsVariable() && predicateIsVariable() && objectIsVariable() ) {
             return engine.findPredicateObject(subject);
         } else if (subjectIsVariable() && ! predicateIsVariable() && ! objectIsVariable()) {
             return engine.findSubject(predicate, object);
         } else if (subjectIsVariable() && ! predicateIsVariable() && objectIsVariable()) {
-            return engine.findSubjectPredicate(object);
-        } else if (subjectIsVariable() && predicateIsVariable() && ! objectIsVariable()) {
             return engine.findSubjectObject(predicate);
-        } else if (subjectIsVariable() && predicateIsVariable() && objectIsVariable() ) {
-            return engine.findPredicateObject(subject);
+        } else if (subjectIsVariable() && predicateIsVariable() && ! objectIsVariable()) {
+            return engine.findSubjectPredicate(object);
         } else {
            return null;
        }

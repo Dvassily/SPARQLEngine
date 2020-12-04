@@ -2,8 +2,8 @@ package nosqlRDF;
 
 import nosqlRDF.datas.RDFTriple;
 import nosqlRDF.requests.Request;
+import nosqlRDF.requests.Result;
 import nosqlRDF.requests.Condition;
-import nosqlRDF.InvalidQueryArgument;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
@@ -23,12 +23,14 @@ public class SPARQLEngineTest
     private static final String ALICE_ENTITY = "Alice";
     private static final String LIVES_IN_PREDICATE = "livesIn";
     private static final String WORKS_FOR_PREDICATE = "worksFor";
-    private static final String PARIS_ENTITY = "Paris";
+    private static final String IS_LOCATED_IN_PREDICATE = "isLocatedIn";
+    private static final String US_ENTITY = "US";
+    private static final String NEW_YORK_ENTITY = "New York";
     private static final String EDF_ENTITY = "EDF";
 
 //    private static final Condition cond1 = new Condition("v0",BORN_ON_DATE_PREDICATE,ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY);
 //    private static final Condition cond2 = new Condition("v0",HAS_NAME_PREDICATE,ABRAHAM_LINCOLN_NAME_ENTITY);
-//    private static final Condition cond3 = new Condition(ALICE_ENTITY,"v0",PARIS_ENTITY);
+//    private static final Condition cond3 = new Condition(ALICE_ENTITY,"v0",NEW_YORK_ENTITY);
 //    private static final Condition cond4 = new Condition(ALICE_ENTITY,WORKS_FOR_PREDICATE,"v0");
 
     private List<Condition> conditions=new ArrayList<Condition>();
@@ -42,19 +44,21 @@ public class SPARQLEngineTest
         engine.insertTriple(ABRAHAM_LINCOLN_ENTITY, HAS_NAME_PREDICATE, ABRAHAM_LINCOLN_NAME_ENTITY);
         engine.insertTriple(ABRAHAM_LINCOLN_ENTITY, BORN_ON_DATE_PREDICATE, ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY);
         engine.insertTriple(ABRAHAM_LINCOLN_ENTITY, DIED_ON_DATE_PREDICATE, ABRAHAM_LINCOLN_DEATH_DATE_ENTITY);
-        engine.insertTriple(ALICE_ENTITY, LIVES_IN_PREDICATE, PARIS_ENTITY);
+        engine.insertTriple(ALICE_ENTITY, LIVES_IN_PREDICATE, NEW_YORK_ENTITY);
         engine.insertTriple(ALICE_ENTITY, WORKS_FOR_PREDICATE, EDF_ENTITY);
+        engine.insertTriple(NEW_YORK_ENTITY, IS_LOCATED_IN_PREDICATE, US_ENTITY);
+        engine.insertTriple(EDF_ENTITY, IS_LOCATED_IN_PREDICATE, US_ENTITY);
 
         engine.initDictionaryAndIndexes();
     }
 
     @Test
     public void testInsertTriple() {
-        assertEquals(12, engine.entityCount());
+        assertEquals(14, engine.entityCount());
     }
 
     @Test
-    public void testFindSubject() throws InvalidQueryArgument {
+    public void testFindSubject() throws InvalidQueryArgumentException {
         Set<RDFTriple> triples = engine.findSubject(HAS_NAME_PREDICATE, ABRAHAM_LINCOLN_NAME_ENTITY);
         assertEquals(1, triples.size());
         RDFTriple triple = triples.iterator().next();
@@ -63,7 +67,7 @@ public class SPARQLEngineTest
     }
 
     @Test
-    public void testFindObject() throws InvalidQueryArgument {
+    public void testFindObject() throws InvalidQueryArgumentException {
         Set<RDFTriple> triples = engine.findObject(ABRAHAM_LINCOLN_ENTITY, HAS_NAME_PREDICATE);
         assertEquals(1, triples.size());
         RDFTriple triple = triples.iterator().next();
@@ -72,7 +76,7 @@ public class SPARQLEngineTest
     }
 
     @Test
-    public void testFindPredicate() throws InvalidQueryArgument {
+    public void testFindPredicate() throws InvalidQueryArgumentException {
         Set<RDFTriple> triples = engine.findPredicate(ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY, ABRAHAM_LINCOLN_ENTITY);
         assertEquals(1, triples.size());
         RDFTriple triple = triples.iterator().next();
@@ -81,7 +85,7 @@ public class SPARQLEngineTest
     }
 
     @Test
-    public void testFindPredicateObject() throws InvalidQueryArgument {
+    public void testFindPredicateObject() throws InvalidQueryArgumentException {
         Set<RDFTriple> triples = engine.findPredicateObject(ABRAHAM_LINCOLN_ENTITY);
 
         assertEquals(3, triples.size());
@@ -99,7 +103,7 @@ public class SPARQLEngineTest
     }
 
     @Test
-    public void testFindSubjectPredicate() throws InvalidQueryArgument {
+    public void testFindSubjectPredicate() throws InvalidQueryArgumentException {
         Set<RDFTriple> triples = engine.findSubjectPredicate(ABRAHAM_LINCOLN_BIRTH_DATE_ENTITY);
         assertEquals(1, triples.size());
         RDFTriple triple = triples.iterator().next();
@@ -109,12 +113,51 @@ public class SPARQLEngineTest
     }
 
     @Test
-    public void testFindSubjectObject() throws InvalidQueryArgument {
+    public void testFindSubjectObject() throws InvalidQueryArgumentException {
         Set<RDFTriple> triples = engine.findSubjectObject(HAS_NAME_PREDICATE);
         assertEquals(1, triples.size());
 
         RDFTriple triple = triples.iterator().next();
         assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
+    }
+
+    @Test
+    public void testQuery() throws InvalidQueryArgumentException {
+        List<Condition> conditions = new ArrayList<>();
+        Condition c1 = new Condition();
+        c1.setSubject("x", true);
+        c1.setPredicate(LIVES_IN_PREDICATE, false);
+        c1.setObject("y", true);
+
+        Condition c2 = new Condition();
+        c2.setSubject("x", true);
+        c2.setPredicate(WORKS_FOR_PREDICATE, false);
+        c2.setObject("z", true);
+
+        Condition c3 = new Condition();
+        c3.setSubject("y", true);
+        c3.setPredicate(IS_LOCATED_IN_PREDICATE, false);
+        c3.setObject(US_ENTITY, false);
+
+        Condition c4 = new Condition();
+        c4.setSubject("z", true);
+        c4.setPredicate(IS_LOCATED_IN_PREDICATE, false);
+        c4.setObject("US", false);
+
+        conditions.add(c1);
+        conditions.add(c2);
+        conditions.add(c3);
+        conditions.add(c4);
+
+        List<String> projection = new ArrayList<>();
+        projection.add("x");
+
+        Request request = new Request(projection, conditions, "");
+
+        Result result = engine.query(request);
+
+        assertEquals(1, result.count());
+        assertTrue(result.containsResult("x", ALICE_ENTITY));
     }
 
 //   @Test
@@ -166,7 +209,7 @@ public class SPARQLEngineTest
 //    RDFTriple res=engine.query(req).iterator().next();
 //    assertEquals(ALICE_ENTITY,res.getSubject());
 //    assertEquals(LIVES_IN_PREDICATE,res.getPredicate());
-//    assertEquals(PARIS_ENTITY,res.getObject());
+//    assertEquals(NEW_YORK_ENTITY,res.getObject());
 //    } 
 
 //    @Test

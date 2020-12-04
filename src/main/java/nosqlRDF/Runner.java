@@ -80,7 +80,7 @@ public class Runner
         requestBenchmarkEngine.begin();
         Result result = engine.query(query);
         requestBenchmarkEngine.end();
-        // writeTrace("Number of results : " + triples.size());
+        writeTrace("Number of results : " + result.count());
         writeTrace("Execution duration : " + requestBenchmarkEngine.getDuration() + "ms");
 
         if (check) {

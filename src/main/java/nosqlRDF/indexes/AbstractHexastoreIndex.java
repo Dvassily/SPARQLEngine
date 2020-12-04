@@ -24,7 +24,7 @@ import java.math.BigInteger;
  * The order of the concatenation depends of the implementation
  */
 public abstract class AbstractHexastoreIndex {
-    public static final int entityKeySize = 16;
+    public static final int entityKeySize = 64;
 
     private Dictionary dictionary;
     private TreeMap<BigInteger, RDFTriple> content = new TreeMap<>();

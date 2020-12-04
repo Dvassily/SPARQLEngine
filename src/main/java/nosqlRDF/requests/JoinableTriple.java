@@ -56,4 +56,28 @@ public class JoinableTriple extends RDFTriple
 
         return result;
     }
+
+    public String toString() {
+        String result = "(";
+
+        if (subjectVariable != null) {
+            result += subjectVariable + "=";
+        }
+
+        result += getSubject() + ", ";
+
+        if (predicateVariable != null) {
+            result += predicateVariable + "=";
+        }
+
+        result += getPredicate() + ", ";
+
+        if (objectVariable != null) {
+            result += objectVariable + "=";
+        }
+
+        result += getObject();
+
+        return result + ")";
+    }
 }

@@ -160,7 +160,7 @@ public class SPARQLEngine {
             }
         } catch (InvalidQueryArgumentException e) {
             // Do nothing
-            System.out.println("Argument ''" + e.getArgument() + "' wasn't found");
+            System.out.println("Argument '" + e.getArgument() + "' wasn't found");
         }
 
         Result result = new Result();

@@ -32,23 +32,15 @@ public class JoinOperation implements JoinableSet {
                 Set<String> commonVariables = new HashSet<>(variablesFrom.keySet());
                 commonVariables.retainAll(variablesTo.keySet());
 
-                // All variables are common
-                if (commonVariables.size() == variablesFrom.size()) {
-                    boolean equality = true;
+                boolean equality = true;
 
-                    for (String variable : commonVariables) {
-                        if (! variablesFrom.get(variable).equals(variablesTo.get(variable))) {
-                            equality = false;
-                        }
+                for (String variable : commonVariables) {
+                    if (! variablesFrom.get(variable).equals(variablesTo.get(variable))) {
+                        equality = false;
                     }
+                }
 
-                    if (equality) {
-                        System.out.println("+" + tripleFrom.getSubject());
-                        System.out.println("+" + tripleFrom.getObject());
-                        result.add(tripleFrom);
-                        result.add(tripleTo);
-                    }
-                } else {
+                if (equality) {
                     result.add(tripleFrom);
                     result.add(tripleTo);
                 }

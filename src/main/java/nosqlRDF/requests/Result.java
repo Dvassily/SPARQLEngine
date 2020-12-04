@@ -74,4 +74,17 @@ public class Result {
         return result;
     }
 
+    public int count() {
+        int result = 0;
+
+        for (Set<String> values : content.values()) {
+            result += values.size();
+        }
+
+        return result;
+    }
+
+    public boolean containsResult(String variable, String value) {
+        return content.get(variable).contains(value);
+    }
 }
