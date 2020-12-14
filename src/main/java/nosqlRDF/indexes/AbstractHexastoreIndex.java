@@ -59,9 +59,6 @@ public abstract class AbstractHexastoreIndex {
         BigInteger keyLowerBound = composeKeyInternal(xKey, BigInteger.valueOf(0), BigInteger.valueOf(0));
         BigInteger keyUpperBound = composeKeyInternal(xKey.add(BigInteger.valueOf(1)), BigInteger.valueOf(0), BigInteger.valueOf(0)).subtract(BigInteger.valueOf(1));
 
-        System.out.println(keyLowerBound);
-        System.out.println(keyUpperBound);
-
         return valuesBetween(keyLowerBound, keyUpperBound);
     }
 

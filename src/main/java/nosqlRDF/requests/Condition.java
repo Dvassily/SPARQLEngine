@@ -4,8 +4,6 @@ import nosqlRDF.datas.RDFTriple;
 import nosqlRDF.SPARQLEngine;
 import nosqlRDF.InvalidQueryArgumentException;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -118,7 +116,8 @@ public class Condition implements JoinableSet {
         return joinableTriple;
     }
 
-    public Set<String> variables() {
-        return new HashSet<>();
+    @Override
+    public String toString() {
+        return "(" + subject + ", " + predicate + ", " + object + ")";
     }
 }

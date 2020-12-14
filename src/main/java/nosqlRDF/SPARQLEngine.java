@@ -158,16 +158,15 @@ public class SPARQLEngine {
                 tripleSet.addAll(request.getConditions().get(0).elements(this));
             } else if (request.getConditions().size() > 1) {
                 JoinOperation join = buildJoinNode(request.getConditions().iterator(), null);
-                tripleSet = join.perform(this);
+                tripleSet.addAll(join.perform(this));
             }
         } catch (InvalidQueryArgumentException e) {
-            // Do nothing
             System.out.println("Argument '" + e.getArgument() + "' wasn't found");
+
+            return new Result();
         }
 
         Result result = new Result();
-
-        // Projection
         for (JoinableTriple triple : tripleSet) {
             for (String projection : request.getProjection()) {
                 Map<String, String> variables = triple.variables();

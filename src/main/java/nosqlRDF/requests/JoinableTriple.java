@@ -10,6 +10,7 @@ public class JoinableTriple extends RDFTriple
     private String subjectVariable = null;
     private String predicateVariable = null;
     private String objectVariable = null;
+    private boolean joined = false;
 
 	public JoinableTriple(RDFTriple triple) {
 		super(triple.getSubject(), triple.getPredicate(), triple.getObject());

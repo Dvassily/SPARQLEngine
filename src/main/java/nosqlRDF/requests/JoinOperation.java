@@ -4,15 +4,19 @@ import nosqlRDF.InvalidQueryArgumentException;
 import nosqlRDF.SPARQLEngine;
 import nosqlRDF.datas.RDFTriple;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.aksw.commons.collections.Pair;
 
 public class JoinOperation implements JoinableSet {
     private JoinableSet setFrom;
     private JoinableSet setTo;
-    private Set<String> resultSet = new HashSet<>();
 
     public JoinOperation(JoinableSet setFrom, JoinableSet setTo) {
         this.setFrom = setFrom;
@@ -20,10 +24,11 @@ public class JoinOperation implements JoinableSet {
     }
 
     public Set<JoinableTriple> perform(SPARQLEngine engine) throws InvalidQueryArgumentException {
-        System.out.println("join " + setFrom + " with " + setTo);
         Set<JoinableTriple> elementsSetFrom = setFrom.elements(engine);
         Set<JoinableTriple> elementsSetTo = setTo.elements(engine);
-        Set<JoinableTriple> result = new HashSet<>();
+        Set<JoinableTriple> resultingSet = new HashSet<>();
+
+        System.out.println("join " + setFrom + " with " + setTo);
 
         for (JoinableTriple tripleFrom : elementsSetFrom) {
             for (JoinableTriple tripleTo : elementsSetTo) {
@@ -33,46 +38,29 @@ public class JoinOperation implements JoinableSet {
                 commonVariables.retainAll(variablesTo.keySet());
 
                 boolean equality = true;
+                boolean hasCommonVariables = ! commonVariables.isEmpty();
 
                 for (String variable : commonVariables) {
                     if (! variablesFrom.get(variable).equals(variablesTo.get(variable))) {
-                        equality = false;
+                        equality &= false;
+                        continue;
                     }
+
                 }
 
-                if (equality) {
-                    result.add(tripleFrom);
-                    result.add(tripleTo);
+                if (hasCommonVariables && equality || ! hasCommonVariables) {
+                    System.out.println("Join " + tripleFrom + " and " + tripleTo + ", cvar:" + hasCommonVariables);
+                    resultingSet.add(tripleTo);
+                    resultingSet.add(tripleFrom);
                 }
             }
         }
-        System.out.println("join " + setFrom + " with " + setTo + " : Done !");
 
-        return result;
+        return resultingSet;
     }
 
-    private void project(Set<RDFTriple> tripleSet, String projection) {
-        Condition condition = (Condition) tripleSet;
-
-        for (RDFTriple triple : tripleSet) {
-            if (condition.getSubject().equals(projection)) {
-                resultSet.add(triple.getSubject());
-            } else if (condition.getPredicate().equals(projection)) {
-                resultSet.add(triple.getPredicate());
-            } else if (condition.getObject().equals(projection)) {
-                resultSet.add(triple.getObject());
-            }
-        }
-    }
-
-	@Override
+    @Override
 	public Set<JoinableTriple> elements(SPARQLEngine engine) throws InvalidQueryArgumentException {
         return perform(engine);
     }
-
-	@Override
-	public Set<String> variables() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

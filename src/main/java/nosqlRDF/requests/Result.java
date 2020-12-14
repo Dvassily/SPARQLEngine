@@ -3,6 +3,7 @@ package nosqlRDF.requests;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.HashMap;
 
 public class Result {
@@ -14,6 +15,48 @@ public class Result {
         }
 
         content.get(variable).add(value);
+    }
+
+    public void remove(String variable, String value) {
+        if (content.containsKey(variable)) {
+            content.get(variable).remove(value);
+
+            if (content.get(variable).isEmpty()) {
+                content.remove(variable);
+            }
+        }
+    }
+
+    public boolean containsResult(String variable, String value) {
+        if (! content.containsKey(variable)) {
+            return false;
+        }
+
+        return content.get(variable).contains(value);
+    }
+
+    public void join(Result other) {
+        for (Map.Entry<String, Set<String>> entry : other.content.entrySet()) {
+            String variable = entry.getKey();
+
+            for (String value : entry.getValue()) {
+                if (! containsResult(variable, value)) {
+                    add(variable, value);
+                }
+            }
+        }
+
+        for (Map.Entry<String, Set<String>> entry : content.entrySet()) {
+            String variable = entry.getKey();
+
+            for (Iterator<String> iterator = entry.getValue().iterator(); iterator.hasNext(); ) {
+                String value = iterator.next();
+
+                if (other.content.containsKey(variable) && ! other.containsResult(variable, value)) {
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     @Override
@@ -84,7 +127,4 @@ public class Result {
         return result;
     }
 
-    public boolean containsResult(String variable, String value) {
-        return content.get(variable).contains(value);
-    }
 }
