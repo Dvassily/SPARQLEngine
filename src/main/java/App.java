@@ -36,7 +36,7 @@ public class App {
 
         for (String queryFile : queryFiles) {
             try {
-                Runner runner = new Runner(arguments.getDataPath(), queryFile, arguments.getOutputPath(), arguments.isVerbose(), true);
+                Runner runner = new Runner(queryFile, arguments);
 
                 try {
                     runner.run();

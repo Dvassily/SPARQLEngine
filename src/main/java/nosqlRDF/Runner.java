@@ -1,44 +1,44 @@
 package nosqlRDF;
 
-import nosqlRDF.datas.RDFTriple;
-import nosqlRDF.requests.SPARQLRequestParser;
 import nosqlRDF.requests.Request;
 import nosqlRDF.requests.Result;
+import nosqlRDF.requests.SPARQLRequestParser;
+import nosqlRDF.utils.Arguments;
 import nosqlRDF.utils.BenchmarkEngine;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import org.apache.jena.rdfconnection.RDFConnection;
-import org.apache.jena.rdfconnection.RDFConnectionLocal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdfconnection.RDFConnection;
+import org.apache.jena.rdfconnection.RDFConnectionLocal;
 import org.apache.jena.sparql.core.DatasetOne;
 
-public class Runner
-{
-    private String dataPath;
-    private String queryFile;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Logger;
+
+public class Runner {
+    private final String dataPath;
+    private final String queryFile;
     private List<Request> queries = new ArrayList<>();
     private SPARQLEngine engine;
-    private Logger logger = Logger.getLogger(Runner.class.getName());
-    private ArrayList<Long> executionDurations = new ArrayList<>();
+    private final Logger logger = Logger.getLogger(Runner.class.getName());
     // private WorkloadOutputWriter workloadOutputWriter;
-    private boolean verbose;
-    private boolean check;
+    private final boolean verbose;
+    private final boolean check;
+
+
+
+    // logging time
+    private final ArrayList<Long> executionDurations = new ArrayList<>();
+    private long requestParsingTime;
+    private long dictionaryCreationTime;
+    private long workloadExecutionDuration;
+
+    private FileWriter outputFile;
+
+    private Arguments arguments;
+
     private RDFConnection connection;
 
     public Runner(String dataPath, String queryFile, String outputPath, boolean verbose, boolean check) throws IOException {
@@ -49,6 +49,8 @@ public class Runner
         this.verbose = verbose;
         this.check = check;
 
+        this.arguments = null;
+
         if (check) {
             Model model = ModelFactory.createDefaultModel();
             model.read(dataPath, "RDF/XML");
@@ -57,20 +59,115 @@ public class Runner
         }
     }
 
+    public Runner(String queryFile, Arguments arguments) throws IOException {
+        this(arguments.getDataPath(), queryFile, arguments.getOutputPath(), arguments.isVerbose(), arguments.isJena());
+        this.arguments = arguments;
+    }
+
     public void run() throws IOException {
         writeTrace("Started the execution of query list '" + queryFile + "' with dataset '" + dataPath + "')");
         writeTrace("Started : Data file parsing and indexes construction : Done !");
         engine = new SPARQLEngine();
         parseData();
+
+        BenchmarkEngine createDictionaryBenchmark = new BenchmarkEngine("create dict benchmark");
+        createDictionaryBenchmark.begin();
         engine.initDictionaryAndIndexes();
+
+        createDictionaryBenchmark.end();
+        dictionaryCreationTime = createDictionaryBenchmark.getDuration();
+
         writeTrace("Data file parsing and indexes construction : Done !");
         writeTrace("Started : requests execution");
+
+        if(arguments.isShuffle()) {
+            Collections.shuffle(queries);
+        }
+
+        if(arguments.getWarm() != -1) {
+            Collections.shuffle(queries);
+            List<Request> warmupQueries = queries.subList(0, (int)(queries.size() * arguments.getWarm()) / 100);
+
+            for (Request query : warmupQueries) {
+                executionDurations.add(executeQuery(query));
+            }
+        }
+
+        BenchmarkEngine requestBenchmarkEngine = new BenchmarkEngine("Request benchmark");
+        requestBenchmarkEngine.begin();
 
         for (Request query : queries) {
             executionDurations.add(executeQuery(query));
         }
 
+
+        requestBenchmarkEngine.end();
+        workloadExecutionDuration = requestBenchmarkEngine.getDuration();
+
+
+        if(arguments.getOutputPath() != null) {
+            exportOutput();
+        }
+
+
         writeTrace("request execution : Done !");
+    }
+
+
+
+    private void exportOutput() {
+
+
+
+        String line = String.format("%s,%s,%d,%d,%d,%d,%d\n", dataPath, queryFile, engine.entityCount(),
+                queries.size(), requestParsingTime, dictionaryCreationTime,
+                6,  workloadExecutionDuration  );
+
+
+        try {
+            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output.csv", true);
+
+            csvWriter.append(line);
+
+            csvWriter.flush();
+            csvWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void exportQueryStats(long duration, long count) {
+        String line = String.format("%d,%d\n",  duration, count );
+
+
+        try {
+            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output_query_stats.csv", true);
+
+            csvWriter.append(line);
+
+            csvWriter.flush();
+            csvWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportQueryResults(String queryResult) {
+        String line = String.format("%s\n",  queryResult );
+
+
+        try {
+            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output_query_stats.csv", true);
+
+            csvWriter.append(line);
+
+            csvWriter.flush();
+            csvWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private long executeQuery(Request query) {
@@ -83,8 +180,17 @@ public class Runner
         writeTrace("Number of results : " + result.count());
         writeTrace("Execution duration : " + requestBenchmarkEngine.getDuration() + "ms");
 
+        // jena optin
         if (check) {
             validateResult(query.getText(), result);
+        }
+
+        if(arguments.isExportQueryStats()) {
+            exportQueryStats(requestBenchmarkEngine.getDuration(), result.count());
+        }
+
+        if(arguments.isExportQueryResults()) {
+            exportQueryResults(result.toString());
         }
 
         System.out.println(result.toString());
@@ -104,12 +210,13 @@ public class Runner
         }
 
         initEngine.end();
+        requestParsingTime = initEngine.getDuration();
     }
 
     public double meanExecutionDuration() {
         long sum = 0;
 
-        for(long duration : executionDurations) {
+        for (long duration : executionDurations) {
             sum += duration;
         }
 
@@ -125,17 +232,17 @@ public class Runner
     public void validateResult(String query, Result results) {
         Result expectedResults = new Result();
 
-        connection.querySelect(query, (qs)-> {
-                Iterator<String> iterator = qs.varNames();
+        connection.querySelect(query, (qs) -> {
+            Iterator<String> iterator = qs.varNames();
 
-                while (iterator.hasNext()) {
-                    String variable = iterator.next();
+            while (iterator.hasNext()) {
+                String variable = iterator.next();
 
-                    expectedResults.add(variable, qs.get(variable).toString());
-                }
+                expectedResults.add(variable, qs.get(variable).toString());
+            }
         });
 
-        if (! expectedResults.equals(results)) {
+        if (!expectedResults.equals(results)) {
             throw new CheckAgainstOracleFailureException(query, expectedResults, results, engine);
         }
     }
