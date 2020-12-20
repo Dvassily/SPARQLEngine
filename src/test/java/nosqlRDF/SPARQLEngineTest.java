@@ -121,44 +121,44 @@ public class SPARQLEngineTest
         assertEquals(ABRAHAM_LINCOLN_NAME_ENTITY, triple.getObject());
     }
 
-    @Test
-    public void testQuery() throws InvalidQueryArgumentException {
-        List<Condition> conditions = new ArrayList<>();
-        Condition c1 = new Condition();
-        c1.setSubject("x", true);
-        c1.setPredicate(LIVES_IN_PREDICATE, false);
-        c1.setObject("y", true);
+    // @Test
+    // public void testQuery() throws InvalidQueryArgumentException {
+    //     List<Condition> conditions = new ArrayList<>();
+    //     Condition c1 = new Condition();
+    //     c1.setSubject("x", true);
+    //     c1.setPredicate(LIVES_IN_PREDICATE, false);
+    //     c1.setObject("y", true);
 
-        Condition c2 = new Condition();
-        c2.setSubject("x", true);
-        c2.setPredicate(WORKS_FOR_PREDICATE, false);
-        c2.setObject("z", true);
+    //     Condition c2 = new Condition();
+    //     c2.setSubject("x", true);
+    //     c2.setPredicate(WORKS_FOR_PREDICATE, false);
+    //     c2.setObject("z", true);
 
-        Condition c3 = new Condition();
-        c3.setSubject("y", true);
-        c3.setPredicate(IS_LOCATED_IN_PREDICATE, false);
-        c3.setObject(US_ENTITY, false);
+    //     Condition c3 = new Condition();
+    //     c3.setSubject("y", true);
+    //     c3.setPredicate(IS_LOCATED_IN_PREDICATE, false);
+    //     c3.setObject(US_ENTITY, false);
 
-        Condition c4 = new Condition();
-        c4.setSubject("z", true);
-        c4.setPredicate(IS_LOCATED_IN_PREDICATE, false);
-        c4.setObject("US", false);
+    //     Condition c4 = new Condition();
+    //     c4.setSubject("z", true);
+    //     c4.setPredicate(IS_LOCATED_IN_PREDICATE, false);
+    //     c4.setObject("US", false);
 
-        conditions.add(c1);
-        conditions.add(c2);
-        conditions.add(c3);
-        conditions.add(c4);
+    //     conditions.add(c1);
+    //     conditions.add(c2);
+    //     conditions.add(c3);
+    //     conditions.add(c4);
 
-        List<String> projection = new ArrayList<>();
-        projection.add("x");
+    //     List<String> projection = new ArrayList<>();
+    //     projection.add("x");
 
-        Request request = new Request(projection, conditions, "");
+    //     Request request = new Request(projection, conditions, "");
 
-        Result result = engine.query(request);
+    //     Result result = engine.query(request);
 
-        assertEquals(1, result.count());
-        assertTrue(result.containsResult("x", ALICE_ENTITY));
-    }
+    //     assertEquals(1, result.count());
+    //     assertTrue(result.containsResult("x", ALICE_ENTITY));
+    // }
 
 //   @Test
 //   public void testReqCond1() {
