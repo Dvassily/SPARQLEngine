@@ -35,28 +35,12 @@ public class Result {
         return content.get(variable).contains(value);
     }
 
-    public void join(Result other) {
-        for (Map.Entry<String, Set<String>> entry : other.content.entrySet()) {
-            String variable = entry.getKey();
+    public Set<String> variables() {
+        return content.keySet();
+    }
 
-            for (String value : entry.getValue()) {
-                if (! containsResult(variable, value)) {
-                    add(variable, value);
-                }
-            }
-        }
-
-        for (Map.Entry<String, Set<String>> entry : content.entrySet()) {
-            String variable = entry.getKey();
-
-            for (Iterator<String> iterator = entry.getValue().iterator(); iterator.hasNext(); ) {
-                String value = iterator.next();
-
-                if (other.content.containsKey(variable) && ! other.containsResult(variable, value)) {
-                    iterator.remove();
-                }
-            }
-        }
+    public Set<String> values(String variable) {
+        return content.get(variable);
     }
 
     @Override

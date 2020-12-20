@@ -13,9 +13,10 @@ import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import java.io.FileWriter;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Arguments arguments = new Arguments();
 
         try {
@@ -27,6 +28,17 @@ public class App {
 
         if (arguments.getDataPath() == null) {
             return;
+        }
+
+        if (arguments.isExportQueryStats()) {
+            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output_query_stats.csv", false);
+            csvWriter.close();
+        }
+
+        if (arguments.isExportQueryResults()) {
+            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output_query_results.csv", false);
+            csvWriter.close();
+
         }
 
         List<String> queryFiles = findQueryFiles(arguments.getRequestPath());

@@ -65,6 +65,24 @@ public class Condition implements JoinableSet {
         return result;
     }
 
+    public Set<String> variables() {
+        Set<String> result = new HashSet<>();
+
+        if (subjectIsVariable()) {
+            result.add(subject);
+        }
+
+        if (predicateIsVariable()) {
+            result.add(predicate);
+        }
+
+        if (objectIsVariable()) {
+            result.add(object);
+        }
+
+        return result;
+    }
+
     public Set<RDFTriple> findMatchingTriple(SPARQLEngine engine) throws InvalidQueryArgumentException {
        if (! subjectIsVariable() && ! predicateIsVariable() && ! objectIsVariable()) {
             return new HashSet<>(Arrays.asList(new RDFTriple(subject, predicate, object)));

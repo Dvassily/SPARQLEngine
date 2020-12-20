@@ -6,10 +6,14 @@ import nosqlRDF.datas.RDFTriple;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
 import java.util.Set;
 
 import org.aksw.commons.collections.Pair;
@@ -17,41 +21,32 @@ import org.aksw.commons.collections.Pair;
 public class JoinOperation implements JoinableSet {
     private JoinableSet setFrom;
     private JoinableSet setTo;
+    private Set<JoinableTriple> propagated = new HashSet<>();
 
     public JoinOperation(JoinableSet setFrom, JoinableSet setTo) {
         this.setFrom = setFrom;
         this.setTo = setTo;
     }
 
+	@Override
+	public Set<JoinableTriple> elements(SPARQLEngine engine) throws InvalidQueryArgumentException {
+        return perform(engine);
+    }
+
     public Set<JoinableTriple> perform(SPARQLEngine engine) throws InvalidQueryArgumentException {
         Set<JoinableTriple> elementsSetFrom = setFrom.elements(engine);
         Set<JoinableTriple> elementsSetTo = setTo.elements(engine);
         Set<JoinableTriple> resultingSet = new HashSet<>();
-
         System.out.println("join " + setFrom + " with " + setTo);
 
         for (JoinableTriple tripleFrom : elementsSetFrom) {
             for (JoinableTriple tripleTo : elementsSetTo) {
-                Map<String, String> variablesFrom = tripleFrom.variables();
-                Map<String, String> variablesTo = tripleTo.variables();
-                Set<String> commonVariables = new HashSet<>(variablesFrom.keySet());
-                commonVariables.retainAll(variablesTo.keySet());
-
-                boolean equality = true;
-                boolean hasCommonVariables = ! commonVariables.isEmpty();
-
-                for (String variable : commonVariables) {
-                    if (! variablesFrom.get(variable).equals(variablesTo.get(variable))) {
-                        equality &= false;
-                        continue;
-                    }
-
-                }
-
-                if (hasCommonVariables && equality || ! hasCommonVariables) {
-                    System.out.println("Join " + tripleFrom + " and " + tripleTo + ", cvar:" + hasCommonVariables);
-                    resultingSet.add(tripleTo);
-                    resultingSet.add(tripleFrom);
+                if (!resultingSet.contains(tripleTo)
+                    && tripleFrom.hasCommonVariablesWith(tripleTo)
+                    && tripleFrom.allCommonVariablesEquals(tripleTo)) {
+                    Set<JoinableTriple> propagation = propagate(tripleFrom, elementsSetFrom);
+                    propagated.addAll(propagation);
+                    resultingSet.addAll(propagation);
                 }
             }
         }
@@ -59,8 +54,40 @@ public class JoinOperation implements JoinableSet {
         return resultingSet;
     }
 
-    @Override
-	public Set<JoinableTriple> elements(SPARQLEngine engine) throws InvalidQueryArgumentException {
-        return perform(engine);
+    private Set<JoinableTriple> propagate(JoinableTriple base, Set<JoinableTriple> elements) {
+        Set<JoinableTriple> result = new HashSet<>();
+        Set<JoinableTriple> visited = new HashSet<>();
+        Queue<JoinableTriple> queue = new LinkedList<>();
+        queue.add(base);
+
+        while (!queue.isEmpty()) {
+            JoinableTriple current = queue.remove();
+
+            result.add(current);
+
+            for (JoinableTriple triple : elements) {
+                boolean rebranch = false;
+
+                for (JoinableTriple visitedTriple : visited) {
+                    if (triple.hasSameStructureAs(visitedTriple)) {
+                        rebranch = true;
+                    }
+                }
+
+                if (! rebranch
+                    && triple.hasCommonVariablesWith(current)
+                    && triple.allCommonVariablesEquals(current)) {
+                    if (! visited.contains(triple)) {
+                        if (!propagated.contains(triple)) {
+                            queue.add(triple);
+                        }
+                    }
+                }
+
+                visited.add(current);
+            }
+        }
+
+        return result;
     }
 }

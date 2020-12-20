@@ -115,60 +115,6 @@ public class Runner {
 
 
 
-    private void exportOutput() {
-
-
-
-        String line = String.format("%s,%s,%d,%d,%d,%d,%d\n", dataPath, queryFile, engine.entityCount(),
-                queries.size(), requestParsingTime, dictionaryCreationTime,
-                6,  workloadExecutionDuration  );
-
-
-        try {
-            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output.csv", true);
-
-            csvWriter.append(line);
-
-            csvWriter.flush();
-            csvWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    private void exportQueryStats(long duration, long count) {
-        String line = String.format("%d,%d\n",  duration, count );
-
-
-        try {
-            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output_query_stats.csv", true);
-
-            csvWriter.append(line);
-
-            csvWriter.flush();
-            csvWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void exportQueryResults(String queryResult) {
-        String line = String.format("%s\n",  queryResult );
-
-
-        try {
-            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output_query_stats.csv", true);
-
-            csvWriter.append(line);
-
-            csvWriter.flush();
-            csvWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private long executeQuery(Request query) {
         writeTrace("Execution of request : ");
@@ -179,10 +125,11 @@ public class Runner {
         requestBenchmarkEngine.end();
         writeTrace("Number of results : " + result.count());
         writeTrace("Execution duration : " + requestBenchmarkEngine.getDuration() + "ms");
+        boolean resultIsValid = false;
 
         // jena optin
         if (check) {
-            validateResult(query.getText(), result);
+            resultIsValid = validateResult(query.getText(), result);
         }
 
         if(arguments.isExportQueryStats()) {
@@ -190,7 +137,7 @@ public class Runner {
         }
 
         if(arguments.isExportQueryResults()) {
-            exportQueryResults(result.toString());
+            exportQueryResults(query.getText(), result, resultIsValid);
         }
 
         System.out.println(result.toString());
@@ -229,7 +176,7 @@ public class Runner {
         }
     }
 
-    public void validateResult(String query, Result results) {
+    public boolean validateResult(String query, Result results) {
         Result expectedResults = new Result();
 
         connection.querySelect(query, (qs) -> {
@@ -242,8 +189,76 @@ public class Runner {
             }
         });
 
-        if (!expectedResults.equals(results)) {
-            throw new CheckAgainstOracleFailureException(query, expectedResults, results, engine);
+        return expectedResults.equals(results);
+    }
+
+    private void exportOutput() {
+        String line = String.format("%s,%s,%d,%d,%d,%d,%d\n", dataPath, queryFile, engine.entityCount(),
+                queries.size(), requestParsingTime, dictionaryCreationTime,
+                6,  workloadExecutionDuration  );
+
+        try {
+            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output.csv", true);
+
+            csvWriter.append(line);
+
+            csvWriter.flush();
+            csvWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+    private void exportQueryStats(long duration, long count) {
+        String line = String.format("%d,%d\n",  duration, count );
+
+
+        try {
+            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output_query_stats.csv", true);
+
+            csvWriter.append(line);
+
+            csvWriter.flush();
+            csvWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportQueryResults(String query, Result result, boolean resultIsValid) {
+        String line = query + ",";
+        Set<String> variables = result.variables();
+
+        if (variables.isEmpty()) {
+            line = line.substring(0, line.length() - 1);
+        } else {
+            for (String variable : variables) {
+                line += variable + ",";
+
+                for (String value : result.values(variable)) {
+                    line += value + ",";
+                }
+            }
+        }
+
+        if (! check) {
+            line = line.substring(0, line.length() - 1);
+        } else {
+            line += resultIsValid;
+        }
+
+        line += "\n";
+
+        try {
+            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output_query_results.csv", true);
+
+            csvWriter.append(line);
+
+            csvWriter.flush();
+            csvWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
