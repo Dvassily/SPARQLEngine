@@ -1,6 +1,7 @@
 package nosqlRDF.requests;
 
 import java.util.List;
+import java.util.Set;
 
 public class Request {
     private List<Condition> conditions;
@@ -43,5 +44,28 @@ public class Request {
         }
 	
         return result + "}\n";
+    }
+
+    public boolean isStarQuery() {
+        Set<String> variableFirstPattern = conditions.get(0).variables();
+
+        for (String variable : variableFirstPattern) {
+            int i = 1;
+
+            boolean inAllClause = true;
+            while (i < conditions.size() && inAllClause) {
+                if (! conditions.get(i).variables().contains(variable)) {
+                    inAllClause = false;
+                }
+
+                ++i;
+            }
+
+            if (inAllClause) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -1,16 +1,16 @@
 Dictionary : {
- - New York : 5
- - hasName : 9
- - EDF : 0
- - Alice : 3
- - worksFor : 11
- - 1809-02-12 : 8
- - DiedOnDate : 12
- - Abraham Lincoln : 10
- - livesIn : 4
- - 1865-04-15 : 13
- - isLocatedIn : 1
- - BornOnDate : 7
- - Abraham_Lincoln : 6
- - US : 2
+ - New York : 7
+ - hasName : 3
+ - Alice : 5
+ - EDF : 10
+ - worksFor : 13
+ - DiedOnDate : 1
+ - 1809-02-12 : 9
+ - Abraham Lincoln : 4
+ - livesIn : 6
+ - 1865-04-15 : 2
+ - isLocatedIn : 11
+ - BornOnDate : 8
+ - Abraham_Lincoln : 0
+ - US : 12
 }
