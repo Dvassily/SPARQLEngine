@@ -21,7 +21,6 @@ import org.aksw.commons.collections.Pair;
 public class JoinOperation implements JoinableSet {
     private JoinableSet setFrom;
     private JoinableSet setTo;
-    private Set<JoinableTriple> propagated = new HashSet<>();
 
     public JoinOperation(JoinableSet setFrom, JoinableSet setTo) {
         this.setFrom = setFrom;
@@ -45,8 +44,8 @@ public class JoinOperation implements JoinableSet {
                     && tripleFrom.hasCommonVariablesWith(tripleTo)
                     && tripleFrom.allCommonVariablesEquals(tripleTo)) {
                     Set<JoinableTriple> propagation = propagate(tripleFrom, elementsSetFrom);
-                    propagated.addAll(propagation);
                     resultingSet.addAll(propagation);
+                    resultingSet.add(tripleTo);
                 }
             }
         }
@@ -62,29 +61,17 @@ public class JoinOperation implements JoinableSet {
 
         while (!queue.isEmpty()) {
             JoinableTriple current = queue.remove();
-
             result.add(current);
 
             for (JoinableTriple triple : elements) {
-                boolean rebranch = false;
-
-                for (JoinableTriple visitedTriple : visited) {
-                    if (triple.hasSameStructureAs(visitedTriple)) {
-                        rebranch = true;
-                    }
-                }
-
-                if (! rebranch
-                    && triple.hasCommonVariablesWith(current)
-                    && triple.allCommonVariablesEquals(current)) {
+                if (triple.hasCommonVariablesWith(current)
+                    && triple.allCommonVariablesEquals(current)
+                    && ! triple.hasSameStructureAs(current)) {
                     if (! visited.contains(triple)) {
-                        if (!propagated.contains(triple)) {
-                            queue.add(triple);
-                        }
+                        queue.add(triple);
+                        visited.add(current);
                     }
                 }
-
-                visited.add(current);
             }
         }
 

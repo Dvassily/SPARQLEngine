@@ -38,8 +38,10 @@ public class App {
         if (arguments.isExportQueryResults()) {
             FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output_query_results.csv", false);
             csvWriter.close();
-
         }
+
+        FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output.csv", false);
+        csvWriter.close();
 
         List<String> queryFiles = findQueryFiles(arguments.getRequestPath());
 

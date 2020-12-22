@@ -11,6 +11,7 @@ import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionLocal;
 import org.apache.jena.sparql.core.DatasetOne;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class Runner {
 
         if (check) {
             Model model = ModelFactory.createDefaultModel();
-            model.read(dataPath, "RDF/XML");
+            model.read(new File(dataPath).toURL().toString(), "RDF/XML");
             DatasetOne ds = new DatasetOne(model);
             connection = new RDFConnectionLocal(ds);
         }
@@ -100,7 +101,7 @@ public class Runner {
 
 
         writeTrace("Started the execution of query list '" + queryFile + "' with dataset '" + dataPath + "')");
-        writeTrace("Started : Data file parsing and indexes construction : Done !");
+        writeTrace("Started : Data file parsing and indexes construction :");
         engine = new SPARQLEngine();
         parseData();
 
@@ -119,12 +120,14 @@ public class Runner {
         }
 
         if(arguments.getWarm() != -1) {
+            writeTrace("Warm engine");
             Collections.shuffle(queries);
-            List<Request> warmupQueries = queries.subList(0, (int)(queries.size() * arguments.getWarm()) / 100);
+            List<Request> warmupQueries = queries.subList(0, (int)(queries.size() * (arguments.getWarm() * queries.size())));
 
             for (Request query : warmupQueries) {
-                executionDurations.add(executeQuery(query));
+                executeQuery(query);
             }
+            writeTrace("Warm engine: done !");
         }
 
         BenchmarkEngine requestBenchmarkEngine = new BenchmarkEngine("Request benchmark");
@@ -134,21 +137,15 @@ public class Runner {
             executionDurations.add(executeQuery(query));
         }
 
-
         requestBenchmarkEngine.end();
         workloadExecutionDuration = requestBenchmarkEngine.getDuration();
-
 
         if(arguments.getOutputPath() != null) {
             exportOutput();
         }
 
-
         writeTrace("request execution : Done !");
     }
-
-
-
 
     private long executeQuery(Request query) {
         writeTrace("Execution of request : ");
@@ -167,7 +164,7 @@ public class Runner {
         }
 
         if(arguments.isExportQueryStats()) {
-            exportQueryStats(requestBenchmarkEngine.getDuration(), result.count());
+            exportQueryStats(requestBenchmarkEngine.getDuration(), result.count(), query.isStarQuery());
         }
 
         if(arguments.isExportQueryResults()) {
@@ -245,8 +242,8 @@ public class Runner {
         }
     }
 
-    private void exportQueryStats(long duration, long count) {
-        String line = String.format("%d,%d\n",  duration, count );
+    private void exportQueryStats(long duration, long count, boolean isStarQuery) {
+        String line = String.format("%d,%d,%b\n",  duration, count, isStarQuery);
 
 
         try {
@@ -266,7 +263,7 @@ public class Runner {
         Set<String> variables = result.variables();
 
         if (variables.isEmpty()) {
-            line = line.substring(0, line.length() - 1);
+            line = line.substring(0, line.length() - 1) + ",";
         } else {
             for (String variable : variables) {
                 line += variable + ",";
