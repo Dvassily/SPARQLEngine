@@ -39,13 +39,16 @@ public class Arguments implements IArguments {
             description = "verbose option to show execution log")
     private boolean jena = false;
 
-    public void setWarm(double warm) {
-        this.warm = warm;
-    }
-
+    @Parameter(names = {"-logMemory"},
+            description = "verbose option to show execution log")
+    public boolean logMemoryUsage = false;
 
     public double getWarm() {
         return warm;
+    }
+
+    public void setWarm(double warm) {
+        this.warm = warm;
     }
 
     @Parameter(names = {"-warm"},
