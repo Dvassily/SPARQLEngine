@@ -65,6 +65,40 @@ public class Runner {
     }
 
     public void run() throws IOException {
+        Thread thread;
+
+        if(arguments.logMemoryUsage) {
+            thread = new Thread(){
+                public void run(){
+
+
+                    while(true) {
+                        try {
+
+                            String line = String.format("%s\n", Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+                            FileWriter csvWriter = new FileWriter(arguments.getOutputPath() + "/output-memory-usage.txt", true);
+
+                            csvWriter.append(line);
+
+                            csvWriter.flush();
+                            csvWriter.close();
+
+                            Thread.sleep(200);
+
+                        } catch (IOException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }
+            };
+
+            thread.start();
+        }
+
+
+
         writeTrace("Started the execution of query list '" + queryFile + "' with dataset '" + dataPath + "')");
         writeTrace("Started : Data file parsing and indexes construction : Done !");
         engine = new SPARQLEngine();
@@ -191,6 +225,8 @@ public class Runner {
 
         return expectedResults.equals(results);
     }
+
+
 
     private void exportOutput() {
         String line = String.format("%s,%s,%d,%d,%d,%d,%d\n", dataPath, queryFile, engine.entityCount(),

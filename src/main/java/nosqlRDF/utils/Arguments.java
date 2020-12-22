@@ -39,6 +39,10 @@ public class Arguments implements IArguments {
             description = "verbose option to show execution log")
     private boolean jena = false;
 
+    @Parameter(names = {"-logMemoryUsage"},
+            description = "verbose option to show execution log")
+    public boolean logMemoryUsage = false;
+
     public double getWarm() {
         return warm;
     }
